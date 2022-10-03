@@ -203,11 +203,11 @@ public class PlaySudoku extends AppCompatActivity {
             public void onClick(View view) {
                 // Change sudoku board button to gray when restart board
                 MainActivity.choiceSudokuBoard[btId].setBackgroundColor(Color.parseColor("#d6d7d7"));
-                try {
+                /*try {
                     ((DataManager) getApplication()).deleteBoardState(id);
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
 
                 for (int i = 0; i < 9; ++i) {
                     for (int j = 0; j < 9; ++j) {
