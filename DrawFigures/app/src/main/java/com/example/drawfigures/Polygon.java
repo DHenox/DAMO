@@ -54,11 +54,13 @@ public class Polygon {
         path.close();
         Paint paint = new Paint();
         paint.setColor(polygonColor);
-        if (!selected)
-            paint.setStyle(Paint.Style.FILL);
-        else {
+
+        canvas.drawPath(path,paint);
+        paint.setStyle(Paint.Style.FILL);
+        if (selected){
+            paint.setColor(Color.BLACK);
             paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(0.01f);
+            paint.setStrokeWidth(0.015f);
         }
         canvas.drawPath(path,paint);
     }

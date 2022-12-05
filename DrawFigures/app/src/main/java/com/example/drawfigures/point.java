@@ -20,7 +20,7 @@ public class point {
     static point polar (double r, double a){return new point(r*Math.cos(a), r*Math.sin(a));}
 
     static double norm(point p){return p.x*p.x+p.y*p.y;}
-    static double modulo(point p){return Math.sqrt(modulo(p));}
+    static double modulo(point p){return Math.sqrt(norm(p));}
     static double dotProd(point p1, point p2){return p1.x*p2.x+p1.y*p2.y;}
 
     static point vecToReference(point v, point OX, point OY){

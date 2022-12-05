@@ -7,21 +7,17 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     int width;
     int height;
     int size;
-    CoordinateManager cm;
+    CoordinatesManager cm;
     Canvas canvas;
     int bgColor = Color.GRAY;
     PolygonsManager pm;
@@ -81,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         canvas.setBitmap(bitmap);
 
         pm = new PolygonsManager();
-        cm = new CoordinateManager();
+        cm = new CoordinatesManager();
         cm.setPm(pm);
         cm.size = size;
         cm.setCamera(new point(0, 0), new point(1, 0));
@@ -107,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        pm.add(new Polygon(new point(0, 0), 0.015, 12, "cross"));
+        pm.add(new Polygon(new point(0, 0), 0.008, 12, "cross"));
         draw();
 
         Button showImgBtn = new Button(this);
