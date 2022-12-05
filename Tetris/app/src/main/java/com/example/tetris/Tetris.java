@@ -121,7 +121,7 @@ public class Tetris extends AppCompatActivity {
                     else if(motionEvent.getAction() == MotionEvent.ACTION_UP){
                         validToMove = false;
                     }
-                    if(validToMove) {
+                    if(validToMove && (x >= dv.minX && x <= dv.maxX)) {
                         int endColumn = Math.round(x-dv.minX)/dv.blockWidth;
                         if(lastEndColmn < endColumn && endColumn != startColumn){
                             ts.moveActiveFigureRight();
