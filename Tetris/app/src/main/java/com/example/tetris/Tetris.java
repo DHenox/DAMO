@@ -273,7 +273,9 @@ public class Tetris extends AppCompatActivity {
         dv.setBackgroundColor(gameBgColor);
         setBoardTouchEvent(dv);
 
-        ((DataManager)getApplication()).setTetrisManager(1);    //  Sustituir por droplist de settings
+        if(!((DataManager)getApplication()).managerSelected()) {
+            ((DataManager) getApplication()).setTetrisManager(0);
+        }
 
         if(((DataManager)getApplication()).hasBoardState()){
             System.out.println("EXISTE UN ESTADO GUARDADO");
@@ -345,8 +347,6 @@ public class Tetris extends AppCompatActivity {
                         }
                         dv.invalidate();
                     } else {
-                        /*System.out.println("GAME OVER");
-                        System.out.println("Final score: [" + ts.getScore() + "]");*/
                         ((FrameLayout) findViewById(R.id.board_lay)).removeView(dv);
                         if (restartBtn.getParent() == null) {
                             ((FrameLayout) findViewById(R.id.board_lay)).removeView(restartBtn);

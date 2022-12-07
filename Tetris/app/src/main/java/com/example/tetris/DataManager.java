@@ -12,7 +12,6 @@ public class DataManager extends Application {
     TetrisManager tetrisManager;
 
     void saveBoard(String s) throws IOException {
-        System.out.println("SAVED SIZE: " + s.length());
         tetrisManager.saveBoard(s);
     }
 
@@ -26,6 +25,10 @@ public class DataManager extends Application {
 
     void deleteBoard() throws IOException{
         tetrisManager.deleteBoard();
+    }
+
+    boolean managerSelected(){
+        return tetrisManager != null;
     }
 
     void setTetrisManager(int manager) {

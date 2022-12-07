@@ -157,7 +157,7 @@ public class DrawView extends View {
     private void clearStored(BoardBlock[][] matrix, Canvas canvas) {
         Paint p = new Paint();
         if(!ts.alreadyStored) {
-            p.setColor(Color.rgb(100, 210, 100));
+            p.setColor(Color.rgb(100, 125, 100));
         }
         else{
             p.setColor(Color.GRAY);

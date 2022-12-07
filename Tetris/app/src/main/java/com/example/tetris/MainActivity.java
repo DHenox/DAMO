@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // TODO almacenar las mejores scores
-    // TODO configurar preferences
+    // TODO configurar guardados de partidas
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
         playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intentPlay = new Intent(MainActivity.this, Tetris.class);
-                startActivityForResult(intentPlay, GAME_REQUEST);
-                setResult(Tetris.RESULT_OK, intentPlay);
+                Intent intent = new Intent(MainActivity.this, Tetris.class);
+                startActivityForResult(intent, GAME_REQUEST);
+                setResult(Tetris.RESULT_OK, intent);
             }
         });
         linlay.addView(playBtn);
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         linlay.addView(topScoreBtn);
 
         preferencesBtn = new Button(this);
-        preferencesBtn.setText("Preferences");
+        preferencesBtn.setText("Settings");
         preferencesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
