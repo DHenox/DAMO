@@ -71,12 +71,17 @@ public class Tetris extends AppCompatActivity {
         }
     }
 
+    /**
+     * Devuelve un string que contiene toda la información del juego actual
+     * @return
+     */
     private String stateToString() {
         String state = "";
 
+        //  AÑADIMOS LOS COLORES DE TODOS LOS BLOQUES DEL TABLERO EXCEPTO LOS DE LA FIGURA ACTIVA
         for(int i = 0; i < ts.rows; ++i){
             for (int j = 0; j < ts.columns; j++) {
-                if(!isActivePosition(new Point(j, i))) {
+                if(!isActivePosition(new Point(j, i))) {    //  no es bloque de figura activa
                     state += String.valueOf(blockColorAt(new Point(j, i)));
                 }
                 else{
@@ -90,6 +95,7 @@ public class Tetris extends AppCompatActivity {
                 state += "\n";
         }
 
+        //  RECOPILAMOS LAS POSICIONES DE LOS BLOQUES QUE CONFORMAN A LA FIGURA ACTIVA (se utiliza abajo)
         String savedGameActiveFigPos = "";
         BoardBlock[] activeBlocks = ts.getActiveFigure().figBlocks;
         for (int i = 0; i < activeBlocks.length; i++) {
@@ -99,11 +105,13 @@ public class Tetris extends AppCompatActivity {
             }
         }
 
+        //  AÑADIMOS EL TIPO DE LA FIGURA ALMACENADA PARA INTERCAMBIAR Y EL INDICADOR DE FIGURA YA INTERCAMBIADA
         if(ts.getStoredFigure() != null){
             state += "\nStoredFigureType=" + ts.getStoredFigure().figType;
             state += "\nAlreadyStored=" + ts.alreadyStored;
         }
 
+        //  AÑADIMOS EL TIPO DE LA FIGURA ACTIVA, POSICIONES DE LA FIGURA ACTIVA, LA PUNTUACIÓN Y LAS DIMENSIONES DEL TABLERO
         state += "\nActiveFigureType=" + ts.getActiveFigure().figType;
         state += "\nActiveFigurePos=" + savedGameActiveFigPos;
         state += "\nGameScore=" + String.valueOf(ts.getScore());
@@ -112,36 +120,50 @@ public class Tetris extends AppCompatActivity {
         return state;
     }
 
+    /**
+     * Genera un nuevo juego a partir del estado pasado como parametro
+     * @param s
+     */
     private void stringToState(String s) {
+        //  SEPARAMOS CADA LINEA DEL STRING QUE REPRESENTA EL ESTADO DEL JUEGO GUARDADO
         String[] lines = s.split("\n");
 
+        //  OBTENEMOS LAS DIMENSIONES DEL TABLERO DE JUEGO GUARDADO
         String[] boardSize = lines[lines.length-1].split(" ");
         String r = boardSize[0].substring("Rows=".length());
         String c = boardSize[1].substring("Columns=".length());
         int savedGameRows = Integer.parseInt(r);
         int savedGameColumns = Integer.parseInt(c);
 
+        //  INICIALIZAMOS EL NUEVO ESTADO DE JUEGO EN BASE AL JUEGO GUARDADO
         ts = new TetrisState(savedGameRows, savedGameColumns);
 
         /*for(int i = 0; i < lines.length; ++i){
             System.out.println(String.valueOf(i) + " " + lines[i]);
         }*/
 
+        //  LAS savedGameRows PRIMERAS LINEAS INDICAN LOS COLORES DE CADA POSICIÓN DEL TABLERO DEL JUEGO GUARDADO
+
+        //  DESDE LA LINEA EN LA QUE EMPIEZAN LOS DATOS DEL JUEGO GUARDADO:
         for(int i = savedGameRows; i <lines.length; ++i){
+            //  OBTENEMOS EL TIPO DE LA FIGURA ALMACENADA PARA INTERCAMBIAR
             if(lines[i].contains("StoredFigureType=")){
                 String storedFigType = lines[i].substring("StoredFigureType=".length());
                 TetrisFigure.FigureType storedFigureType = stringToFigType(storedFigType);
                 ts.storedFig = new TetrisFigure(storedFigureType, ts, true);
             }
+            //  OBTENEMOS EL INDICADOR DE FIGURA YA ALMACENADA
             else if(lines[i].contains("AlreadyStored=")){
                 String storedGameAlreadyStoredFig = lines[i].substring("AlreadyStored=".length());
                 ts.alreadyStored = Boolean.parseBoolean(storedGameAlreadyStoredFig);
             }
+            //  OBTENEMOS EL TIPO DE LA FIGURA ACTIVA
             else if(lines[i].contains("ActiveFigureType=")){
                 String activeFigType = lines[i].substring("ActiveFigureType=".length());
                 TetrisFigure.FigureType activeFigureType = stringToFigType(activeFigType);
                 ts.activeFig = new TetrisFigure(activeFigureType, ts, true);
             }
+            //  OBTENEMOS LAS POSICIONES DE LOS BLOQUES QUE CONFORMAN A LA FIGURA ACTIVA
             else if(lines[i].contains("ActiveFigurePos=")){
                 String[] blocksPositions = lines[i].substring("ActiveFigurePos=".length()).split(" ");
                 for (int j = 0; j < blocksPositions.length; j++) {
@@ -152,14 +174,18 @@ public class Tetris extends AppCompatActivity {
                     ts.activeFig.figBlocks[j].position.y = yPos;
                 }
             }
+            //  OBTENEMOS LA PUNTUACIÓN DEL JUEGO QUE SE HA GUARDADO
             else if(lines[i].contains("GameScore=")){
                 ts.score = Integer.parseInt(lines[i].substring("GameScore=".length()));
             }
         }
 
-        System.out.println("=============SAVED BOARD COLORS=========");
+
+        //  LAS savedGameRows PRIMERAS LINEAS INDICAN LOS COLORES DE CADA POSICIÓN DEL TABLERO DEL JUEGO GUARDADO
+        //  ASIGNAMOS LOS COLORES DE CADA POSICIÓN DEL TABLERO AL TABLERO DEL NUEVO JUEGO
+        //System.out.println("=============SAVED BOARD COLORS=========");
         for(int i = 0; i < savedGameRows; ++i){
-            System.out.print(String.valueOf(i) + " ");
+            //System.out.print(String.valueOf(i) + " ");
             String[] blocksColors = lines[i].split(" ");
             for (int j = 0; j < blocksColors.length; j++) {
                 int blockColor = Integer.parseInt(blocksColors[j]);
@@ -167,11 +193,11 @@ public class Tetris extends AppCompatActivity {
                 if(blockColor != -1 && !isActivePosition(new Point(j, i))){
                     ts.board[i][j].state = BoardBlock.BlockState.FILLED;
                 }
-                System.out.print(blocksColors[j] + " ");
+                //System.out.print(blocksColors[j] + " ");
             }
-            System.out.println();
+            //System.out.println();
         }
-        System.out.println("=================================");
+        //System.out.println("=================================");
 
         ts.pauseGame(true);
         dv = new DrawView(this, ts);
@@ -179,7 +205,11 @@ public class Tetris extends AppCompatActivity {
         setBoardTouchEvent(dv);
     }
 
-    //
+    /**
+     * Devuelve el color de la posición indicada
+     * @param p
+     * @return
+     */
     private int blockColorAt(Point p){
         for(BoardBlock b: ts.getActiveFigure().figBlocks){
             if(b.position.x == p.x && b.position.y == p.y){
@@ -189,6 +219,11 @@ public class Tetris extends AppCompatActivity {
         return ts.getBoardBlockAt(p).color;
     }
 
+    /**
+     * Devuelve true si la posición indicada pertenece a algun bloque de la figura actica
+     * @param p
+     * @return
+     */
     private boolean isActivePosition(Point p){
         for(BoardBlock b: ts.getActiveFigure().figBlocks){
             if(b.position.x == p.x && b.position.y == p.y){
@@ -238,7 +273,7 @@ public class Tetris extends AppCompatActivity {
         dv.setBackgroundColor(gameBgColor);
         setBoardTouchEvent(dv);
 
-        ((DataManager)getApplication()).setTetrisManager(1);    //  Sistotuir por droplist de settings
+        ((DataManager)getApplication()).setTetrisManager(1);    //  Sustituir por droplist de settings
 
         if(((DataManager)getApplication()).hasBoardState()){
             System.out.println("EXISTE UN ESTADO GUARDADO");
@@ -270,7 +305,6 @@ public class Tetris extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    System.out.println("SAVED SIZE2: " + state.length());
                     stringToState(state);
                     savedGame = true;
                     startGame();
@@ -322,19 +356,13 @@ public class Tetris extends AppCompatActivity {
                         Intent intentGameScore = getIntent();
                         intentGameScore.putExtra("score", ts.getScore());
                         setResult(RESULT_OK, intentGameScore);
-
-                        try {
-                            ((DataManager)getApplication()).deleteBoard();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
                     }
                 }
                 handler.postDelayed(runnable, delay);
             }
         };
-        ((FrameLayout)findViewById(R.id.board_lay)).addView(dv);
         handler.postDelayed(runnable, delay);
+        ((FrameLayout)findViewById(R.id.board_lay)).addView(dv);
     }
 
     int lastColmn = -1;
@@ -357,7 +385,7 @@ public class Tetris extends AppCompatActivity {
                     }
 
                     //  Al presionar encima del tablero de juego
-                    boolean insideBoard = (x >= dv.minX && x <= dv.maxX && y >= dv.minY && y <= (dv.minY + dv.maxY));
+                    boolean insideBoard = (x >= dv.minX && x <= dv.maxX && y >= (dv.minY) && y <= (dv.maxY));
                     if(insideBoard && motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                         validToMove = true;
                     }

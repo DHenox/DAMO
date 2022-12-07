@@ -30,6 +30,8 @@ public class TetrisManagerFiles extends TetrisManager{
         );
         writer.write(s.getBytes(StandardCharsets.UTF_8));
         writer.close();
+
+        File file=new File(myContext.getFilesDir()+"/"+fileName);
     }
 
     @Override
@@ -48,7 +50,6 @@ public class TetrisManagerFiles extends TetrisManager{
     @Override
     boolean hasSavedBoard() {
         File file=new File(myContext.getFilesDir()+"/"+fileName);
-        System.out.println("---------> " + String.valueOf(file.exists()));
         return file.exists();
     }
 
