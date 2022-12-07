@@ -25,14 +25,14 @@ public class DrawView extends View {
         super(context);
         paint = new Paint();
         paint.setColor(Color.BLUE);
-        yOffset = 225;
+        yOffset = 15;
         ts = tetrisState;
         boundaryWidth = 7f;
         gridWidth = 3f;
 
         blockWidth = 70;
         minX = 190; maxX = 890;
-        minY = 0; maxY = 1120;
+        minY = 225+yOffset; maxY = 1120;
         firstBlockPos = minX + ((maxX-minX)/ts.columns);
 
         blockWidthStored = 48;
@@ -64,7 +64,7 @@ public class DrawView extends View {
     }
 
     private void drawUpdatedMatrix(BoardBlock[][] matrix, Canvas canvas) {
-        for (int i = 0+ts.standOutBlocks; i < ts.rows; i++) {
+        for (int i = 0; i < ts.rows; i++) {
             for (int j = 0; j < ts.columns; j++) {
                 if (matrix[i][j].state == BoardBlock.BlockState.EMPTY)
                     continue;
@@ -74,9 +74,9 @@ public class DrawView extends View {
                 p.setColor(color);
                 canvas.drawRect(
                         (minX+gridWidth) + j * blockWidth,
-                        yOffset + i * blockWidth + gridWidth - ts.standOutBlocks*blockWidth,
+                        minY + i * blockWidth + gridWidth,
                         (firstBlockPos-gridWidth) + j * blockWidth,
-                        yOffset + (i + 1) * blockWidth - gridWidth - ts.standOutBlocks*blockWidth,
+                        minY + (i + 1) * blockWidth - gridWidth ,
                         p
                 );
             }
@@ -86,13 +86,13 @@ public class DrawView extends View {
     private void clear(BoardBlock[][] matrix, Canvas canvas) {
         Paint p = new Paint();
         p.setColor(Color.GRAY);
-        for (int i = 0+ts.standOutBlocks; i < ts.rows; i++) {
+        for (int i = 0; i < ts.rows; i++) {
             for (int j = 0; j < ts.columns; j++) {
                 canvas.drawRect(
                         (minX+gridWidth) + j * blockWidth,
-                        yOffset + i * blockWidth + gridWidth - ts.standOutBlocks*blockWidth,
+                        minY + i * blockWidth + gridWidth,
                         (firstBlockPos-gridWidth) + j * blockWidth,
-                        yOffset + (i + 1) * blockWidth - gridWidth - ts.standOutBlocks*blockWidth,
+                        minY + (i + 1) * blockWidth - gridWidth,
                         p
                 );
             }
@@ -101,49 +101,37 @@ public class DrawView extends View {
 
     private void drawNewFigure(TetrisFigure tetrisFigure, Canvas canvas) {
         for (BoardBlock block : tetrisFigure.figBlocks) {
-            if(block.position.y >= ts.standOutBlocks) {
+            if(block.position.y >= 0) {
                 int color = getBlockColorCode(block.color);
                 Paint p = new Paint();
                 p.setColor(color);
                 canvas.drawRect(
                         (minX + gridWidth) + block.position.x * blockWidth,
-                        yOffset + block.position.y * blockWidth + gridWidth - ts.standOutBlocks * blockWidth,
+                        minY + block.position.y * blockWidth + gridWidth,
                         (firstBlockPos - gridWidth) + block.position.x * blockWidth,
-                        yOffset + (block.position.y + 1) * blockWidth - gridWidth - ts.standOutBlocks * blockWidth,
+                        minY + (block.position.y + 1) * blockWidth - gridWidth,
                         p
                 );
             }
-            /*else{ //  muestra bloques que sobresalen por encima del tablero
-                int color = getBlockColorCode(block.color);
-                Paint p = new Paint();
-                p.setColor(Color.BLACK);
-                canvas.drawRect(
-                        (minX + gridWidth) + block.position.x * blockWidth,
-                        yOffset + block.position.y * blockWidth + gridWidth - ts.standOutBlocks * blockWidth,
-                        (firstBlockPos - gridWidth) + block.position.x * blockWidth,
-                        yOffset + (block.position.y + 1) * blockWidth - gridWidth - ts.standOutBlocks * blockWidth,
-                        p
-                );
-            }*/
         }
     }
 
     private void boundary(Canvas canvas) {
         paint.setColor(Color.BLACK);
         paint.setStrokeWidth(boundaryWidth);
-        canvas.drawLine(minX, yOffset, minX, yOffset + maxY, paint);
-        canvas.drawLine(maxX, yOffset, maxX, yOffset + maxY, paint);
-        canvas.drawLine(minX, yOffset, maxX, yOffset, paint);
-        canvas.drawLine(minX, yOffset + maxY, maxX, yOffset + maxY, paint);
+        canvas.drawLine(minX, minY, minX, minY + maxY, paint);
+        canvas.drawLine(maxX, minY, maxX, minY + maxY, paint);
+        canvas.drawLine(minX, minY, maxX, minY, paint);
+        canvas.drawLine(minX, minY + maxY, maxX, minY + maxY, paint);
     }
 
     private void grid(Canvas canvas) {
         paint.setStrokeWidth(gridWidth);
         for (int i = firstBlockPos; i < maxX; i = i + blockWidth) {
-            canvas.drawLine(i,yOffset, i, yOffset + maxY, paint);
+            canvas.drawLine(i,minY, i, minY + maxY, paint);
         }
         for (int j = blockWidth; j < maxY; j = j + blockWidth) {
-            canvas.drawLine(minX, yOffset + j, maxX, yOffset + j, paint);
+            canvas.drawLine(minX, minY + j, maxX, minY + j, paint);
         }
     }
 
@@ -168,7 +156,12 @@ public class DrawView extends View {
 
     private void clearStored(BoardBlock[][] matrix, Canvas canvas) {
         Paint p = new Paint();
-        p.setColor(Color.GRAY);
+        if(!ts.alreadyStored) {
+            p.setColor(Color.rgb(100, 210, 100));
+        }
+        else{
+            p.setColor(Color.GRAY);
+        }
         for (int i = 0; i < ts.boardStored.length; i++) {
             for (int j = 0; j < ts.boardStored[0].length; j++) {
                 canvas.drawRect(
@@ -213,6 +206,5 @@ public class DrawView extends View {
         gridStored(canvas);
         clearStored(ts.boardStored, canvas);
         drawStoredFigure(ts.getStoredFigure(), canvas);
-        /*drawStoredMatrix(ts.getStoredFigure(), canvas);*/
     }
 }

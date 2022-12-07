@@ -1,5 +1,6 @@
 package com.example.tetris;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -17,7 +18,26 @@ public class MainActivity extends AppCompatActivity {
     Button topScoreBtn;
     Button preferencesBtn;
     int bestScore;
+    static final int GAME_REQUEST = 0;
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case (GAME_REQUEST): {
+                if (resultCode == Tetris.RESULT_OK) {
+                    int lastGameScore = data.getIntExtra("score", -1);
+                    if(lastGameScore > bestScore){
+                        bestScore = lastGameScore;
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    // TODO almacenar las mejores scores
+    // TODO configurar preferences
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,13 +55,9 @@ public class MainActivity extends AppCompatActivity {
         playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Tetris.class);
-                startActivity(intent);
-
-                int score = intent.getIntExtra("score", -1);
-                if(score > bestScore){
-                    bestScore = score;
-                }
+                Intent intentPlay = new Intent(MainActivity.this, Tetris.class);
+                startActivityForResult(intentPlay, GAME_REQUEST);
+                setResult(Tetris.RESULT_OK, intentPlay);
             }
         });
         linlay.addView(playBtn);

@@ -3,7 +3,7 @@ package com.example.tetris;
 import java.util.Random;
 
 public class TetrisFigure {
-    enum Figure {
+    enum FigureType {
         SQUARE_SHAPED,
         LINE_SHAPED,
         T_SHAPED,
@@ -12,34 +12,36 @@ public class TetrisFigure {
         Z_SHAPED,
         INV_Z_SHAPED;
 
-        private static final Figure[] VALUES = values();
+        private static final FigureType[] VALUES = values();
         private static final int SIZE = VALUES.length;
         private static final Random RANDOM = new Random();
 
-        public static Figure getRandomFigure() {
+        public static FigureType getRandomFigure() {
             return VALUES[RANDOM.nextInt(SIZE)];
         }
     }
 
+    FigureType figType;
     BoardBlock[] figBlocks;
-    Figure figType;
     int rotationState;
     TetrisState ts;
+    boolean stored;
 
-    TetrisFigure(Figure f, int figureId, TetrisState tetrisState, boolean stored){
+    TetrisFigure(FigureType fType, TetrisState tetrisState, boolean storedFig){
         Point[] points;
-        figType = f;
+        figType = fType;
         rotationState = 1;
         ts = tetrisState;
+        stored = storedFig;
 
-        switch (f) {
+        switch (figType) {
             case SQUARE_SHAPED:
                 if(!stored) {
                     points = new Point[]{
-                            new Point(4, 2),
-                            new Point(5, 2),
-                            new Point(4, 3),
-                            new Point(5, 3)
+                            new Point(4, -1),
+                            new Point(5, -1),
+                            new Point(4, 0),
+                            new Point(5, 0)
                     };
                 }
                 else{
@@ -50,15 +52,15 @@ public class TetrisFigure {
                             new Point(1, 3)
                     };
                 }
-                figBlocks = generateFigureBlocks(figureId, 1, points);
+                figBlocks = generateFigureBlocks(1, points);
                 break;
             case LINE_SHAPED:
                 if(!stored) {
                     points = new Point[]{
-                            new Point(4, 0),
-                            new Point(4, 1),
-                            new Point(4, 2),
-                            new Point(4, 3)
+                            new Point(4, -3),
+                            new Point(4, -2),
+                            new Point(4, -1),
+                            new Point(4, 0)
                     };
                 }
                 else{
@@ -69,15 +71,15 @@ public class TetrisFigure {
                             new Point(1, 3)
                     };
                 }
-                figBlocks = generateFigureBlocks(figureId, 2, points);
+                figBlocks = generateFigureBlocks(2, points);
                 break;
             case T_SHAPED:
                 if(!stored) {
                     points = new Point[]{
-                            new Point(4, 1),
-                            new Point(4, 2),
-                            new Point(4, 3),
-                            new Point(5, 2)
+                            new Point(4, -2),
+                            new Point(4, -1),
+                            new Point(4, 0),
+                            new Point(5, -1)
                     };
                 }
                 else{
@@ -88,15 +90,15 @@ public class TetrisFigure {
                             new Point(2, 2)
                     };
                 }
-                figBlocks = generateFigureBlocks(figureId, 3, points);
+                figBlocks = generateFigureBlocks(3, points);
                 break;
             case L_SHAPED:
                 if(!stored) {
                     points = new Point[]{
-                            new Point(4, 1),
-                            new Point(4, 2),
-                            new Point(4, 3),
-                            new Point(5, 3)
+                            new Point(4, -2),
+                            new Point(4, -1),
+                            new Point(4, 0),
+                            new Point(5, 0)
                     };
                 }
                 else{
@@ -107,15 +109,15 @@ public class TetrisFigure {
                             new Point(2, 3)
                     };
                 }
-                figBlocks = generateFigureBlocks(figureId, 4, points);
+                figBlocks = generateFigureBlocks(4, points);
                 break;
             case INV_L_SHAPED:
                 if(!stored) {
                     points = new Point[]{
-                            new Point(5, 1),
-                            new Point(5, 2),
-                            new Point(5, 3),
-                            new Point(4, 3)
+                            new Point(5, -2),
+                            new Point(5, -1),
+                            new Point(5, 0),
+                            new Point(4, 0)
                     };
                 }
                 else{
@@ -126,15 +128,15 @@ public class TetrisFigure {
                             new Point(0, 3)
                     };
                 }
-                figBlocks = generateFigureBlocks(figureId, 5, points);
+                figBlocks = generateFigureBlocks(5, points);
                 break;
             case Z_SHAPED:
                 if(!stored) {
                     points = new Point[]{
-                            new Point(5, 1),
-                            new Point(5, 2),
-                            new Point(4, 2),
-                            new Point(4, 3)
+                            new Point(5, -2),
+                            new Point(5, -1),
+                            new Point(4, -1),
+                            new Point(4, 0)
                     };
                 }
                 else{
@@ -145,15 +147,15 @@ public class TetrisFigure {
                             new Point(0, 2)
                     };
                 }
-                figBlocks = generateFigureBlocks(figureId, 6, points);
+                figBlocks = generateFigureBlocks(6, points);
                 break;
             case INV_Z_SHAPED:
                 if(!stored) {
                     points = new Point[]{
-                            new Point(4, 1),
-                            new Point(4, 2),
-                            new Point(5, 2),
-                            new Point(5, 3)
+                            new Point(4, -2),
+                            new Point(4, -1),
+                            new Point(5, -1),
+                            new Point(5, 0)
                     };
                 }
                 else{
@@ -164,15 +166,15 @@ public class TetrisFigure {
                             new Point(2, 3)
                     };
                 }
-                figBlocks = generateFigureBlocks(figureId, 7, points);
+                figBlocks = generateFigureBlocks(7, points);
                 break;
         }
     }
 
-    private BoardBlock[] generateFigureBlocks(int figId, int color, Point[] points) {
+    private BoardBlock[] generateFigureBlocks(int color, Point[] points) {
         BoardBlock[] blocks = new BoardBlock[points.length];
         for (int i = 0; i < points.length; i++) {
-            blocks[i] = new BoardBlock(color, figId, points[i], BoardBlock.BlockState.FILLED);
+            blocks[i] = new BoardBlock(color, points[i], BoardBlock.BlockState.FILLED);
         }
         return blocks;
     }

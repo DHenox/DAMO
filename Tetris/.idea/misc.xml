@@ -3,9 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/HENOX/Desktop/Universidad/Cursando/DAMO/Tetris/app/src/main/res/layout/activity_data_manager.xml" value="0.18931159420289856" />
         <entry key="..\:/Users/HENOX/Desktop/Universidad/Cursando/DAMO/Tetris/app/src/main/res/layout/activity_main.xml" value="0.2921195652173913" />
         <entry key="..\:/Users/HENOX/Desktop/Universidad/Cursando/DAMO/Tetris/app/src/main/res/layout/activity_scores.xml" value="0.20108695652173914" />
         <entry key="..\:/Users/HENOX/Desktop/Universidad/Cursando/DAMO/Tetris/app/src/main/res/layout/activity_tetris.xml" value="0.2988679352838745" />
+        <entry key="..\:/Users/HENOX/Desktop/Universidad/Cursando/DAMO/Tetris/app/src/main/res/layout/asktorecover.xml" value="0.2988679352838745" />
       </map>
     </option>
   </component>

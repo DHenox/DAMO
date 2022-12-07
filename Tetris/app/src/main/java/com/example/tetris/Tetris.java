@@ -8,11 +8,16 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Tetris extends AppCompatActivity {
     DrawView dv;
@@ -21,11 +26,15 @@ public class Tetris extends AppCompatActivity {
     int gameBgColor;
 
     Button pauseBtn;
+    boolean savedGame;
     Button leftBtn;
     Button rightBtn;
     Button rotateBtn;
     Button downBtn;
     Button dropBtn;
+
+    Button newGameBtn;
+    Button goSavedGameBtn;
 
     Button restartBtn;
 
@@ -36,14 +45,190 @@ public class Tetris extends AppCompatActivity {
     int cycles;
     int maxCycles;
 
-    // TODO almacenar mejor score
-    // TODO configurar preferences
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(!ts.gameOver()) {
+            String s = stateToString();
+            try {
+                ((DataManager) getApplication()).saveBoard(s);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-    @SuppressLint({"ClickableViewAccessibility", "ResourceType"})
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        if(!ts.gameOver()) {
+            String s = stateToString();
+            try {
+                ((DataManager) getApplication()).saveBoard(s);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String stateToString() {
+        String state = "";
+
+        for(int i = 0; i < ts.rows; ++i){
+            for (int j = 0; j < ts.columns; j++) {
+                if(!isActivePosition(new Point(j, i))) {
+                    state += String.valueOf(blockColorAt(new Point(j, i)));
+                }
+                else{
+                    state += "-1";
+                }
+
+                if(j != ts.columns-1)
+                    state += " ";
+            }
+            if(i != ts.rows-1)
+                state += "\n";
+        }
+
+        String savedGameActiveFigPos = "";
+        BoardBlock[] activeBlocks = ts.getActiveFigure().figBlocks;
+        for (int i = 0; i < activeBlocks.length; i++) {
+            savedGameActiveFigPos += activeBlocks[i].position.x + "x" + activeBlocks[i].position.y;
+            if(i != activeBlocks.length-1){
+                savedGameActiveFigPos += " ";
+            }
+        }
+
+        if(ts.getStoredFigure() != null){
+            state += "\nStoredFigureType=" + ts.getStoredFigure().figType;
+            state += "\nAlreadyStored=" + ts.alreadyStored;
+        }
+
+        state += "\nActiveFigureType=" + ts.getActiveFigure().figType;
+        state += "\nActiveFigurePos=" + savedGameActiveFigPos;
+        state += "\nGameScore=" + String.valueOf(ts.getScore());
+        state += "\nRows=" + String.valueOf(ts.rows) + " Columns=" + String.valueOf(ts.columns);
+
+        return state;
+    }
+
+    private void stringToState(String s) {
+        String[] lines = s.split("\n");
+
+        String[] boardSize = lines[lines.length-1].split(" ");
+        String r = boardSize[0].substring("Rows=".length());
+        String c = boardSize[1].substring("Columns=".length());
+        int savedGameRows = Integer.parseInt(r);
+        int savedGameColumns = Integer.parseInt(c);
+
+        ts = new TetrisState(savedGameRows, savedGameColumns);
+
+        /*for(int i = 0; i < lines.length; ++i){
+            System.out.println(String.valueOf(i) + " " + lines[i]);
+        }*/
+
+        for(int i = savedGameRows; i <lines.length; ++i){
+            if(lines[i].contains("StoredFigureType=")){
+                String storedFigType = lines[i].substring("StoredFigureType=".length());
+                TetrisFigure.FigureType storedFigureType = stringToFigType(storedFigType);
+                ts.storedFig = new TetrisFigure(storedFigureType, ts, true);
+            }
+            else if(lines[i].contains("AlreadyStored=")){
+                String storedGameAlreadyStoredFig = lines[i].substring("AlreadyStored=".length());
+                ts.alreadyStored = Boolean.parseBoolean(storedGameAlreadyStoredFig);
+            }
+            else if(lines[i].contains("ActiveFigureType=")){
+                String activeFigType = lines[i].substring("ActiveFigureType=".length());
+                TetrisFigure.FigureType activeFigureType = stringToFigType(activeFigType);
+                ts.activeFig = new TetrisFigure(activeFigureType, ts, true);
+            }
+            else if(lines[i].contains("ActiveFigurePos=")){
+                String[] blocksPositions = lines[i].substring("ActiveFigurePos=".length()).split(" ");
+                for (int j = 0; j < blocksPositions.length; j++) {
+                    String[] blockPos = blocksPositions[j].split("x");
+                    int xPos = Integer.parseInt(blockPos[0]);
+                    int yPos = Integer.parseInt(blockPos[1]);
+                    ts.activeFig.figBlocks[j].position.x = xPos;
+                    ts.activeFig.figBlocks[j].position.y = yPos;
+                }
+            }
+            else if(lines[i].contains("GameScore=")){
+                ts.score = Integer.parseInt(lines[i].substring("GameScore=".length()));
+            }
+        }
+
+        System.out.println("=============SAVED BOARD COLORS=========");
+        for(int i = 0; i < savedGameRows; ++i){
+            System.out.print(String.valueOf(i) + " ");
+            String[] blocksColors = lines[i].split(" ");
+            for (int j = 0; j < blocksColors.length; j++) {
+                int blockColor = Integer.parseInt(blocksColors[j]);
+                ts.board[i][j].color = blockColor;
+                if(blockColor != -1 && !isActivePosition(new Point(j, i))){
+                    ts.board[i][j].state = BoardBlock.BlockState.FILLED;
+                }
+                System.out.print(blocksColors[j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("=================================");
+
+        ts.pauseGame(true);
+        dv = new DrawView(this, ts);
+        dv.setBackgroundColor(gameBgColor);
+        setBoardTouchEvent(dv);
+    }
+
+    //
+    private int blockColorAt(Point p){
+        for(BoardBlock b: ts.getActiveFigure().figBlocks){
+            if(b.position.x == p.x && b.position.y == p.y){
+                return b.color;
+            }
+        }
+        return ts.getBoardBlockAt(p).color;
+    }
+
+    private boolean isActivePosition(Point p){
+        for(BoardBlock b: ts.getActiveFigure().figBlocks){
+            if(b.position.x == p.x && b.position.y == p.y){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private TetrisFigure.FigureType stringToFigType(String s) {
+        TetrisFigure.FigureType figType = TetrisFigure.FigureType.SQUARE_SHAPED;
+        switch (s){
+            case "SQUARE_SHAPED":
+                figType = TetrisFigure.FigureType.SQUARE_SHAPED;
+                break;
+            case "LINE_SHAPED":
+                figType = TetrisFigure.FigureType.LINE_SHAPED;
+                break;
+            case "T_SHAPED":
+                figType = TetrisFigure.FigureType.T_SHAPED;
+                break;
+            case "L_SHAPED":
+                figType = TetrisFigure.FigureType.L_SHAPED;
+                break;
+            case "INV_L_SHAPED":
+                figType = TetrisFigure.FigureType.INV_L_SHAPED;
+                break;
+            case "Z_SHAPED":
+                figType = TetrisFigure.FigureType.Z_SHAPED;
+                break;
+            case "INV_Z_SHAPED":
+                figType = TetrisFigure.FigureType.INV_Z_SHAPED;
+                break;
+        }
+        return figType;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tetris);
 
         rows = 16;
         columns = 10;
@@ -52,7 +237,55 @@ public class Tetris extends AppCompatActivity {
         dv = new DrawView(this, ts);
         dv.setBackgroundColor(gameBgColor);
         setBoardTouchEvent(dv);
-        setButtons();
+
+        ((DataManager)getApplication()).setTetrisManager(1);    //  Sistotuir por droplist de settings
+
+        if(((DataManager)getApplication()).hasBoardState()){
+            System.out.println("EXISTE UN ESTADO GUARDADO");
+            setContentView(R.layout.asktorecover);
+
+            newGameBtn = ((Button)findViewById(R.id._newGame));
+            newGameBtn.setText("No");
+            newGameBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        ((DataManager)getApplication()).deleteBoard();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    startGame();
+                }
+            });
+
+            goSavedGameBtn = ((Button)findViewById(R.id._continueGame));
+            goSavedGameBtn.setText("Yes");
+            goSavedGameBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String state = "";
+                    try {
+                        state = ((DataManager)getApplication()).getBoard();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    System.out.println("SAVED SIZE2: " + state.length());
+                    stringToState(state);
+                    savedGame = true;
+                    startGame();
+                }
+            });
+        }
+        else{
+            startGame();
+        }
+    }
+
+    private void startGame(){
+        setContentView(R.layout.activity_tetris);
+
+        setGameButtons();
 
         long delay = 1;
         maxCycles = 30;
@@ -73,27 +306,39 @@ public class Tetris extends AppCompatActivity {
                             }
                             cycles = 0;
                         }
-                        ++cycles;
+                        else {
+                            ++cycles;
+                        }
                         dv.invalidate();
                     } else {
-                        Intent intent = getIntent();
-                        intent.putExtra("score", ts.getScore());
-                        System.out.println("GAME OVER");
+                        /*System.out.println("GAME OVER");
+                        System.out.println("Final score: [" + ts.getScore() + "]");*/
                         ((FrameLayout) findViewById(R.id.board_lay)).removeView(dv);
                         if (restartBtn.getParent() == null) {
                             ((FrameLayout) findViewById(R.id.board_lay)).removeView(restartBtn);
                             ((FrameLayout) findViewById(R.id.board_lay)).addView(restartBtn);
+                        }
+
+                        Intent intentGameScore = getIntent();
+                        intentGameScore.putExtra("score", ts.getScore());
+                        setResult(RESULT_OK, intentGameScore);
+
+                        try {
+                            ((DataManager)getApplication()).deleteBoard();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
                 handler.postDelayed(runnable, delay);
             }
         };
-        handler.postDelayed(runnable, delay);
         ((FrameLayout)findViewById(R.id.board_lay)).addView(dv);
+        handler.postDelayed(runnable, delay);
     }
 
-    int lastEndColmn = 0;
+    int lastColmn = -1;
+    int lastRow = -1;
     boolean validToMove = false;
     @SuppressLint("ClickableViewAccessibility")
     private void setBoardTouchEvent(DrawView dv) {
@@ -111,25 +356,37 @@ public class Tetris extends AppCompatActivity {
                         return true;
                     }
 
-                    //  Al presionar el tablero de juego
-                    int startColumn = 0;
-                    boolean insideBoard = (x >= dv.minX && x <= dv.maxX && y >= (dv.yOffset+dv.minY) && y <= (dv.yOffset+dv.maxY));
+                    //  Al presionar encima del tablero de juego
+                    boolean insideBoard = (x >= dv.minX && x <= dv.maxX && y >= dv.minY && y <= (dv.minY + dv.maxY));
                     if(insideBoard && motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                        startColumn = Math.round(x-dv.minX)/dv.blockWidth;
                         validToMove = true;
                     }
                     else if(motionEvent.getAction() == MotionEvent.ACTION_UP){
+                        lastColmn = -1;
+                        lastRow = -1;
                         validToMove = false;
                     }
-                    if(validToMove && (x >= dv.minX && x <= dv.maxX)) {
-                        int endColumn = Math.round(x-dv.minX)/dv.blockWidth;
-                        if(lastEndColmn < endColumn && endColumn != startColumn){
-                            ts.moveActiveFigureRight();
+                    if(validToMove) {
+                        //  Mover hacia los lados
+                        int currentColumn = Math.round(x-dv.minX)/dv.blockWidth;
+                        if(lastColmn != -1) {
+                            if (lastColmn < currentColumn) {
+                                ts.moveActiveFigureRight();
+                            } else if (lastColmn > currentColumn) {
+                                ts.moveActiveFigureLeft();
+                            }
                         }
-                        else if(lastEndColmn > endColumn && endColumn != startColumn){
-                            ts.moveActiveFigureLeft();
+                        lastColmn = currentColumn;
+
+                        //  Mover hacia abajo
+                        /*int currentRow = Math.round(y-dv.minY)/dv.blockWidth;
+                        if(lastRow != -1) {
+                            if (lastRow < currentRow) {
+                                ts.moveActiveFigureDown();
+                            }
                         }
-                        lastEndColmn = endColumn;
+                        lastRow = currentRow;*/
+
                         return true;
                     }
                 }
@@ -142,29 +399,44 @@ public class Tetris extends AppCompatActivity {
         scoreText.setText("Score: " + ts.getScore());
     }
 
-    private void setButtons(){
+    private void setGameButtons(){
+        int btnTextColor = Color.WHITE;
+
         pauseBtn = ((Button)findViewById(R.id._pause));
-        pauseBtn.setText("Pause");
+        if(!savedGame) {
+            pauseBtn.setText("Pause");
+        }
+        else{
+            pauseBtn.setText("Resume");
+        }
+        pauseBtn.setTextColor(btnTextColor);
 
         leftBtn = ((Button)findViewById(R.id._left));
         leftBtn.setText("L");
+        leftBtn.setTextColor(btnTextColor);
 
         rightBtn = ((Button)findViewById(R.id._right));
         rightBtn.setText("R");
+        rightBtn.setTextColor(btnTextColor);
 
         rotateBtn = ((Button)findViewById(R.id._rotate));
         rotateBtn.setText("⟳");
+        rotateBtn.setTextColor(btnTextColor);
 
         downBtn = ((Button)findViewById(R.id._down));
         downBtn.setText("↓");
+        downBtn.setTextColor(btnTextColor);
 
         dropBtn = ((Button)findViewById(R.id._drop));
         dropBtn.setText("DROP");
+        dropBtn.setTextColor(btnTextColor);
 
         restartBtn = new Button(this);
         restartBtn.setText("Restart game");
+        restartBtn.setTextColor(btnTextColor);
 
         scoreText = ((TextView)findViewById(R.id._score));
+        scoreText.setTextColor(Color.BLACK);
         setNewScore();
 
         pauseBtn.setOnClickListener(new View.OnClickListener() {
