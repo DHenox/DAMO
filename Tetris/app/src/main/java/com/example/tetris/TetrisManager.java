@@ -19,11 +19,11 @@ abstract public class TetrisManager {
         return ts;
     }
 
-    abstract void saveBoard(String s) throws IOException;
+    abstract void saveGameState(String s) throws IOException;
 
-    abstract String getBoard() throws FileNotFoundException;
+    abstract String getGameState() throws FileNotFoundException;
 
-    abstract boolean hasSavedBoard();
+    abstract boolean hasGameState();
 
-    abstract void deleteBoard() throws IOException;
+    abstract void deleteGameState() throws IOException;
 }

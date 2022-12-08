@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -48,10 +46,10 @@ public class Tetris extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(!ts.gameOver()) {
+        if(((DataManager) getApplication()).userWantsToSave() && !ts.gameOver()) {
             String s = stateToString();
             try {
-                ((DataManager) getApplication()).saveBoard(s);
+                ((DataManager) getApplication()).saveGameState(s);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -61,10 +59,10 @@ public class Tetris extends AppCompatActivity {
     @Override
     protected void onUserLeaveHint() {
         super.onUserLeaveHint();
-        if(!ts.gameOver()) {
+        if(((DataManager) getApplication()).userWantsToSave() && !ts.gameOver()) {
             String s = stateToString();
             try {
-                ((DataManager) getApplication()).saveBoard(s);
+                ((DataManager) getApplication()).saveGameState(s);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -81,8 +79,8 @@ public class Tetris extends AppCompatActivity {
         //  AÑADIMOS LOS COLORES DE TODOS LOS BLOQUES DEL TABLERO EXCEPTO LOS DE LA FIGURA ACTIVA
         for(int i = 0; i < ts.rows; ++i){
             for (int j = 0; j < ts.columns; j++) {
-                if(!isActivePosition(new Point(j, i))) {    //  no es bloque de figura activa
-                    state += String.valueOf(blockColorAt(new Point(j, i)));
+                if(!isActivePosition(new Point(i, j))) {    //  no es bloque de figura activa
+                    state += String.valueOf(blockColorAt(new Point(i, j)));
                 }
                 else{
                     state += "-1";
@@ -99,7 +97,7 @@ public class Tetris extends AppCompatActivity {
         String savedGameActiveFigPos = "";
         BoardBlock[] activeBlocks = ts.getActiveFigure().figBlocks;
         for (int i = 0; i < activeBlocks.length; i++) {
-            savedGameActiveFigPos += activeBlocks[i].position.x + "x" + activeBlocks[i].position.y;
+            savedGameActiveFigPos += activeBlocks[i].position.j + "x" + activeBlocks[i].position.i;
             if(i != activeBlocks.length-1){
                 savedGameActiveFigPos += " ";
             }
@@ -170,8 +168,8 @@ public class Tetris extends AppCompatActivity {
                     String[] blockPos = blocksPositions[j].split("x");
                     int xPos = Integer.parseInt(blockPos[0]);
                     int yPos = Integer.parseInt(blockPos[1]);
-                    ts.activeFig.figBlocks[j].position.x = xPos;
-                    ts.activeFig.figBlocks[j].position.y = yPos;
+                    ts.activeFig.figBlocks[j].position.j = xPos;
+                    ts.activeFig.figBlocks[j].position.i = yPos;
                 }
             }
             //  OBTENEMOS LA PUNTUACIÓN DEL JUEGO QUE SE HA GUARDADO
@@ -190,7 +188,7 @@ public class Tetris extends AppCompatActivity {
             for (int j = 0; j < blocksColors.length; j++) {
                 int blockColor = Integer.parseInt(blocksColors[j]);
                 ts.board[i][j].color = blockColor;
-                if(blockColor != -1 && !isActivePosition(new Point(j, i))){
+                if(blockColor != -1 && !isActivePosition(new Point(i, j))){
                     ts.board[i][j].state = BoardBlock.BlockState.FILLED;
                 }
                 //System.out.print(blocksColors[j] + " ");
@@ -212,7 +210,7 @@ public class Tetris extends AppCompatActivity {
      */
     private int blockColorAt(Point p){
         for(BoardBlock b: ts.getActiveFigure().figBlocks){
-            if(b.position.x == p.x && b.position.y == p.y){
+            if(b.position.j == p.j && b.position.i == p.i){
                 return b.color;
             }
         }
@@ -226,7 +224,7 @@ public class Tetris extends AppCompatActivity {
      */
     private boolean isActivePosition(Point p){
         for(BoardBlock b: ts.getActiveFigure().figBlocks){
-            if(b.position.x == p.x && b.position.y == p.y){
+            if(b.position.j == p.j && b.position.i == p.i){
                 return true;
             }
         }
@@ -273,47 +271,65 @@ public class Tetris extends AppCompatActivity {
         dv.setBackgroundColor(gameBgColor);
         setBoardTouchEvent(dv);
 
-        if(!((DataManager)getApplication()).managerSelected()) {
-            ((DataManager) getApplication()).setTetrisManager(0);
+        //  SI EL USUARIO QUIERE GUARDAR PARTIDAS
+        if(((DataManager)getApplication()).userWantsToSave()){
+            //  ASIGNAMOS UN MANAGER POR DEFECTO SI NO HA SELECCIONADO UNO
+            if(!((DataManager)getApplication()).managerSelected()) {
+                ((DataManager) getApplication()).setTetrisManager(0);
+            }
+
+            if (((DataManager) getApplication()).hasGameState()) {
+                System.out.println("EXISTE UN ESTADO GUARDADO");
+                setContentView(R.layout.activity_ask_to_recover);
+
+                newGameBtn = ((Button) findViewById(R.id._newGame));
+                newGameBtn.setText("No");
+                newGameBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        try {
+                            ((DataManager) getApplication()).deleteGameState();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        startGame();
+                    }
+                });
+
+                goSavedGameBtn = ((Button) findViewById(R.id._continueGame));
+                goSavedGameBtn.setText("Yes");
+                goSavedGameBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String state = "";
+                        try {
+                            state = ((DataManager) getApplication()).getGameState();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        stringToState(state);
+                        savedGame = true;
+                        startGame();
+                    }
+                });
+            }
+            else{
+                startGame();
+            }
         }
-
-        if(((DataManager)getApplication()).hasBoardState()){
-            System.out.println("EXISTE UN ESTADO GUARDADO");
-            setContentView(R.layout.asktorecover);
-
-            newGameBtn = ((Button)findViewById(R.id._newGame));
-            newGameBtn.setText("No");
-            newGameBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        //  SI EL USUARIO NO QUIERE GUARDAR PARTIDAS
+        else{
+            //  SI HAY UN MANAGER SELECCIONADO CON UN ESTADO GUARDADO, LO ELIMINAMOS
+            if(((DataManager)getApplication()).managerSelected()) {
+                if (((DataManager) getApplication()).hasGameState()) {
                     try {
-                        ((DataManager)getApplication()).deleteBoard();
+                        ((DataManager) getApplication()).deleteGameState();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    startGame();
                 }
-            });
-
-            goSavedGameBtn = ((Button)findViewById(R.id._continueGame));
-            goSavedGameBtn.setText("Yes");
-            goSavedGameBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String state = "";
-                    try {
-                        state = ((DataManager)getApplication()).getBoard();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-
-                    stringToState(state);
-                    savedGame = true;
-                    startGame();
-                }
-            });
-        }
-        else{
+            }
             startGame();
         }
     }
@@ -353,6 +369,18 @@ public class Tetris extends AppCompatActivity {
                             ((FrameLayout) findViewById(R.id.board_lay)).addView(restartBtn);
                         }
 
+                        if(((DataManager)getApplication()).userWantsToSave()){
+                            if(((DataManager)getApplication()).managerSelected()){
+                                if(((DataManager)getApplication()).hasGameState()){
+                                    try {
+                                        ((DataManager)getApplication()).deleteGameState();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+
                         Intent intentGameScore = getIntent();
                         intentGameScore.putExtra("score", ts.getScore());
                         setResult(RESULT_OK, intentGameScore);
@@ -385,7 +413,7 @@ public class Tetris extends AppCompatActivity {
                     }
 
                     //  Al presionar encima del tablero de juego
-                    boolean insideBoard = (x >= dv.minX && x <= dv.maxX && y >= (dv.minY) && y <= (dv.maxY));
+                    boolean insideBoard = (x >= dv.minX && x <= dv.maxX && y >= dv.minY && y <= (dv.minY + dv.maxY));
                     if(insideBoard && motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                         validToMove = true;
                     }
@@ -461,7 +489,7 @@ public class Tetris extends AppCompatActivity {
 
         restartBtn = new Button(this);
         restartBtn.setText("Restart game");
-        restartBtn.setTextColor(btnTextColor);
+        restartBtn.setTextColor(Color.BLACK);
 
         scoreText = ((TextView)findViewById(R.id._score));
         scoreText.setTextColor(Color.BLACK);

@@ -3,13 +3,13 @@ package com.example.tetris;
 public class BoardBlock {
     int color;
     enum BlockState {EMPTY, FILLED};
-    BlockState state;
     Point position;
+    BlockState state;
 
     BoardBlock(int row, int col){
         color = -1;
-        state = BlockState.EMPTY;
         position = new Point(row, col);
+        state = BlockState.EMPTY;
     }
 
     BoardBlock(int Color, Point pos, BlockState s) {
@@ -20,15 +20,15 @@ public class BoardBlock {
 
     void set(BoardBlock b) {
         color = b.color;
-        position.y = b.position.y;
-        position.x = b.position.x;
+        position.i = b.position.i;
+        position.j = b.position.j;
         state = b.state;
     }
 
     void removeBlock(Point pos){
         color = -1;
-        position.x = pos.x;
-        position.y = pos.y;
+        position.j = pos.j;
+        position.i = pos.i;
         state = BlockState.EMPTY;
     }
 }

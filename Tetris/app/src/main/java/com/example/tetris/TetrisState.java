@@ -1,5 +1,7 @@
 package com.example.tetris;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class TetrisState {
@@ -45,21 +47,21 @@ public class TetrisState {
     }
 
     public BoardBlock getBoardBlockAt(Point pos) {
-        return board[pos.y][pos.x];
+        return board[pos.i][pos.j];
     }
 
     public boolean isConflicting(Point pos) {
-        if (pos.x < 0 || pos.x >= columns || pos.y >= rows)
+        if (pos.j < 0 || pos.j >= columns || pos.i >= rows)
             return true;
-        if (pos.x >= 0 && pos.x < columns && pos.y >= 0 && pos.y < rows)
+        if (pos.j >= 0 && pos.j < columns && pos.i >= 0 && pos.i < rows)
             return getBoardBlockAt(pos).state == BoardBlock.BlockState.FILLED;
         return false;
     }
 
     public boolean rotatingBlockIsConflicting(Point pos) {
-        if(pos.y < 0 || pos.y >= rows)
+        if(pos.i < 0 || pos.i >= rows)
             return true;
-        if (pos.x >= 0 && pos.x < columns && pos.y >= 0 && pos.y < rows)
+        if (pos.j >= 0 && pos.j < columns && pos.i >= 0 && pos.i < rows)
             return getBoardBlockAt(pos).state == BoardBlock.BlockState.FILLED;
         return false;
     }
@@ -68,24 +70,25 @@ public class TetrisState {
         return paused;
     }
 
-    public void pauseGame(boolean b){
-        paused = b;
+    public void pauseGame(boolean pauseGame){
+        paused = pauseGame;
     }
 
     private boolean canAddNewFigure(TetrisFigure tf){
         if(!paused) {
             for (BoardBlock block : tf.figBlocks) {
-                if(block.position.y < 0){
+                if(block.position.i < 0){
                     continue;
                 }
                 boolean alreadyFilled = getBoardBlockAt(block.position).state == BoardBlock.BlockState.FILLED;
-                if (block.position.y >= 0 && block.state == BoardBlock.BlockState.FILLED && alreadyFilled) {
+                if (block.state == BoardBlock.BlockState.FILLED && alreadyFilled) {
+                    Log.i("---->", "GAME OVER");
                     return false;
                 }
             }
             return true;
         }
-        return false;
+        return true;
     }
 
     private boolean validFigureMove(TetrisFigure tf, Point displacement) {
@@ -96,10 +99,10 @@ public class TetrisState {
                     if (isConflicting(shifted)) {
                         return false;
                     }
-                    if (displacement.x != 0 && displacement.y == 0) {
-                        for (int i = block.position.x + 1; i <= block.position.x + displacement.x; ++i) {
-                            if(block.position.y >= 0) {
-                                if (getBoardBlockAt(new Point(i, block.position.y)).state == BoardBlock.BlockState.FILLED) {
+                    if (displacement.j != 0 && displacement.i == 0) {
+                        for (int i = block.position.j + 1; i <= block.position.j + displacement.j; ++i) {
+                            if(block.position.i >= 0) {
+                                if (getBoardBlockAt(new Point(block.position.i, i)).state == BoardBlock.BlockState.FILLED) {
                                     return false;
                                 }
                             }
@@ -116,11 +119,11 @@ public class TetrisState {
         int shift = 0;
         for (BoardBlock block : tf.figBlocks) {
             int auxShift = 0;
-            if(block.state == BoardBlock.BlockState.FILLED && (block.position.x < 0 || block.position.x >= columns)) {
-                if(block.position.x < 0)
-                    auxShift = Math.abs(block.position.x);
-                else if(block.position.x >= columns)
-                    auxShift = (columns-1) - block.position.x;
+            if(block.state == BoardBlock.BlockState.FILLED && (block.position.j < 0 || block.position.j >= columns)) {
+                if(block.position.j < 0)
+                    auxShift = Math.abs(block.position.j);
+                else if(block.position.j >= columns)
+                    auxShift = (columns-1) - block.position.j;
 
                 if(shift < Math.abs(auxShift)) {
                     shift = auxShift;
@@ -131,7 +134,7 @@ public class TetrisState {
     }
 
     boolean moveActiveFigureDown() {
-        if (validFigureMove(activeFig, new Point(0, 1))) {
+        if (validFigureMove(activeFig, new Point(1, 0))) {
             activeFig.moveDown();
             return true;
         } else {
@@ -142,7 +145,7 @@ public class TetrisState {
     }
 
     boolean moveActiveFigureLeft() {
-        if (validFigureMove(activeFig, new Point(-1, 0))) {
+        if (validFigureMove(activeFig, new Point(0, -1))) {
             activeFig.moveLeft();
             return true;
         } else {
@@ -151,7 +154,7 @@ public class TetrisState {
     }
 
     boolean moveActiveFigureRight() {
-        if (validFigureMove(activeFig, new Point(1, 0))) {
+        if (validFigureMove(activeFig, new Point(0, 1))) {
             activeFig.moveRight();
             return true;
         } else {
@@ -184,7 +187,7 @@ public class TetrisState {
         for (BoardBlock block : activeFig.figBlocks) {
             if (block.state == BoardBlock.BlockState.EMPTY)
                 continue;
-            if(block.position.y >= 0) {
+            if(block.position.i >= 0) {
                 getBoardBlockAt(block.position).set(block);
             }
         }
@@ -230,7 +233,7 @@ public class TetrisState {
             if(uniformRow(i, BoardBlock.BlockState.FILLED)){    //  Linea completa
                 //  Eliminar linea completada
                 for(int j = 0; j < columns; ++j) {
-                    board[i][j].removeBlock(new Point(j, i));
+                    board[i][j].removeBlock(new Point(i, j));
                 }
 
                 //  Bajar bloques
@@ -243,7 +246,7 @@ public class TetrisState {
                 //  SIEMPRE que haya bloques en la fila más alta, la limpiamos
                 if(!uniformRow(0, BoardBlock.BlockState.EMPTY)){
                     for(int j = 0; j < columns; ++j) {
-                        board[0][j].removeBlock(new Point(j, 0));
+                        board[0][j].removeBlock(new Point(0, j));
                     }
                 }
                 ++i;
@@ -260,7 +263,7 @@ public class TetrisState {
      */
     boolean uniformRow(int row, BoardBlock.BlockState state){
         for(int j = 0; j < columns; ++j){
-            if(getBoardBlockAt(new Point(j, row)).state == BoardBlock.BlockState.EMPTY) {
+            if(getBoardBlockAt(new Point(row, j)).state == BoardBlock.BlockState.EMPTY) {
                 return false;
             }
         }

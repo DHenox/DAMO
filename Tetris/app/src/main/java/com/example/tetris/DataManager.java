@@ -10,28 +10,44 @@ import java.io.IOException;
 public class DataManager extends Application {
 
     TetrisManager tetrisManager;
+    boolean hasManager;
 
-    void saveBoard(String s) throws IOException {
-        tetrisManager.saveBoard(s);
+    boolean saveActivated = false;
+
+    void saveGameState(String s) throws IOException {
+        tetrisManager.saveGameState(s);
     }
 
-    String getBoard() throws FileNotFoundException{
-        return tetrisManager.getBoard();
+    String getGameState() throws FileNotFoundException{
+        return tetrisManager.getGameState();
     }
 
-    boolean hasBoardState() {
-        return tetrisManager.hasSavedBoard();
+    boolean hasGameState() {
+        return tetrisManager.hasGameState();
     }
 
-    void deleteBoard() throws IOException{
-        tetrisManager.deleteBoard();
+    void deleteGameState() throws IOException{
+        tetrisManager.deleteGameState();
     }
 
     boolean managerSelected(){
-        return tetrisManager != null;
+        boolean preferencesManager = tetrisManager instanceof TetrisManagerPreferences;
+        boolean filesManager = tetrisManager instanceof TetrisManagerFiles;
+        boolean SQLManager = tetrisManager instanceof TetrisManagerSQL;
+
+        return preferencesManager || filesManager || SQLManager;
+    }
+
+    void setUserWantsToSave(boolean saveGame) {
+        saveActivated = saveGame;
+    }
+
+    public boolean userWantsToSave() {
+        return saveActivated;
     }
 
     void setTetrisManager(int manager) {
+        hasManager = true;
         switch (manager){
             case 0:
                 Log.d("SELECTED MANAGER","Preferences");
@@ -50,4 +66,5 @@ public class DataManager extends Application {
 
     @Override
     public void onCreate() {super.onCreate();}
+
 }

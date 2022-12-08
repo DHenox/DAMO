@@ -2,40 +2,46 @@ package com.example.tetris;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 public class Settings extends AppCompatActivity {
 
     int gameManager;
-    LinearLayout linlay;
+    Spinner dropdown;
+    Switch saveSwitch;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        boolean saveGame = saveSwitch.isChecked();
+        ((DataManager) getApplication()).setUserWantsToSave(saveGame);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        linlay = new LinearLayout(this);
-        linlay.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        linlay.setOrientation(LinearLayout.VERTICAL);
-        linlay.setGravity(Gravity.CENTER);
+        setContentView(R.layout.activity_settings);
 
-        Spinner dropdown = new Spinner(this);
+        saveSwitch = ((Switch) findViewById(R.id._saveSwitch));
+
         String[] items = new String[]{"Preferences", "Files", "SQL"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        dropdown = ((Spinner) findViewById(R.id._managerSpinner));
         dropdown.setAdapter(adapter);
+
         gameManager = dropdown.getSelectedItemPosition();
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                ((DataManager)getApplication()).setTetrisManager((int) l);
+                boolean saveGame = saveSwitch.isChecked();
+                if(saveGame) {
+                    ((DataManager) getApplication()).setTetrisManager((int) l);
+                }
             }
 
             @Override
@@ -43,8 +49,5 @@ public class Settings extends AppCompatActivity {
 
             }
         });
-
-        linlay.addView(dropdown);
-        setContentView(linlay);
     }
 }

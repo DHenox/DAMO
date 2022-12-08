@@ -11,6 +11,7 @@ public class TetrisManagerSQL extends TetrisManager{
     SQLiteDatabase db;
 
     String stateName = "gameState";
+    boolean saveActivated;
 
     TetrisManagerSQL(Context context){
         super(context);
@@ -19,25 +20,25 @@ public class TetrisManagerSQL extends TetrisManager{
     }
 
     @Override
-    void saveBoard(String s) throws IOException {
+    void saveGameState(String s) throws IOException {
         db.execSQL("REPLACE INTO tetrisstate VALUES ("+stateName+",'"+s+"')");
     }
 
     @Override
-    String getBoard() throws FileNotFoundException {
+    String getGameState() throws FileNotFoundException {
         Cursor cursor=db.rawQuery("SELECT state FROM tetrisstate WHERE id="+stateName,null);
         cursor.moveToFirst();
         return cursor.getString(0);
     }
 
     @Override
-    boolean hasSavedBoard() {
+    boolean hasGameState() {
         Cursor cursor=db.rawQuery("SELECT state FROM tetrisstate WHERE id="+stateName,null);
         return cursor.getCount()>=1;
     }
 
     @Override
-    void deleteBoard() throws IOException {
+    void deleteGameState() throws IOException {
         db.execSQL("DELETE FROM tetrisstate");
     }
 }

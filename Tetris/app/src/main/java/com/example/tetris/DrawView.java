@@ -101,15 +101,15 @@ public class DrawView extends View {
 
     private void drawNewFigure(TetrisFigure tetrisFigure, Canvas canvas) {
         for (BoardBlock block : tetrisFigure.figBlocks) {
-            if(block.position.y >= 0) {
+            if(block.position.i >= 0) {
                 int color = getBlockColorCode(block.color);
                 Paint p = new Paint();
                 p.setColor(color);
                 canvas.drawRect(
-                        (minX + gridWidth) + block.position.x * blockWidth,
-                        minY + block.position.y * blockWidth + gridWidth,
-                        (firstBlockPos - gridWidth) + block.position.x * blockWidth,
-                        minY + (block.position.y + 1) * blockWidth - gridWidth,
+                        (minX + gridWidth) + block.position.j * blockWidth,
+                        minY + block.position.i * blockWidth + gridWidth,
+                        (firstBlockPos - gridWidth) + block.position.j * blockWidth,
+                        minY + (block.position.i + 1) * blockWidth - gridWidth,
                         p
                 );
             }
@@ -182,10 +182,10 @@ public class DrawView extends View {
                 Paint p = new Paint();
                 p.setColor(color);
                 canvas.drawRect(
-                        (minXStored + gridWidth) + block.position.x * blockWidthStored,
-                        minYStored + block.position.y * blockWidthStored + gridWidth,
-                        (firstBlockPosStored - gridWidth) + block.position.x * blockWidthStored,
-                        minYStored + (block.position.y + 1) * blockWidthStored - gridWidth,
+                        (minXStored + gridWidth) + block.position.j * blockWidthStored,
+                        minYStored + block.position.i * blockWidthStored + gridWidth,
+                        (firstBlockPosStored - gridWidth) + block.position.j * blockWidthStored,
+                        minYStored + (block.position.i + 1) * blockWidthStored - gridWidth,
                         p
                 );
             }

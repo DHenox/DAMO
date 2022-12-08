@@ -10,6 +10,7 @@ public class TetrisManagerPreferences extends TetrisManager{
     SharedPreferences preferences;
 
     String stateName = "gameState";
+    boolean saveActivated;
 
     TetrisManagerPreferences(Context context){
         super(context);
@@ -18,24 +19,24 @@ public class TetrisManagerPreferences extends TetrisManager{
     }
 
     @Override
-    void saveBoard(String s) throws IOException {
+    void saveGameState(String s) throws IOException {
         SharedPreferences.Editor editor=preferences.edit();
         editor.putString(stateName, s);
         editor.commit();
     }
 
     @Override
-    String getBoard() throws FileNotFoundException {
+    String getGameState() throws FileNotFoundException {
         return preferences.getString(stateName,"");
     }
 
     @Override
-    boolean hasSavedBoard() {
+    boolean hasGameState() {
         return preferences.contains(stateName);
     }
 
     @Override
-    void deleteBoard() throws IOException {
+    void deleteGameState() throws IOException {
         SharedPreferences.Editor editor=preferences.edit();
         editor.remove(stateName);
         editor.commit();

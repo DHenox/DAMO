@@ -1,22 +1,14 @@
 package com.example.tetris;
 
 public class Point {
-    int x, y;
+    int i, j;
 
-    Point(int X, int Y){
-        x = X;
-        y = Y;
-    }
-
-    @Override
-    public String toString() {
-        return "Point{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+    Point(int I, int J){
+        i = I;
+        j = J;
     }
 
     static Point add(Point p1, Point p2) {
-        return new Point(p1.x + p2.x, p1.y + p2.y);
+        return new Point(p1.i + p2.i, p1.j + p2.j);
     }
 }

@@ -38,18 +38,18 @@ public class TetrisFigure {
             case SQUARE_SHAPED:
                 if(!stored) {
                     points = new Point[]{
-                            new Point(4, -1),
-                            new Point(5, -1),
-                            new Point(4, 0),
-                            new Point(5, 0)
+                            new Point(-1, 4),
+                            new Point(-1, 5),
+                            new Point(0, 4),
+                            new Point(0, 5)
                     };
                 }
                 else{
                     points = new Point[]{
-                            new Point(0, 2),
-                            new Point(1, 2),
-                            new Point(0, 3),
-                            new Point(1, 3)
+                            new Point(2, 0),
+                            new Point(2, 1),
+                            new Point(3, 0),
+                            new Point(3, 1)
                     };
                 }
                 figBlocks = generateFigureBlocks(1, points);
@@ -57,18 +57,18 @@ public class TetrisFigure {
             case LINE_SHAPED:
                 if(!stored) {
                     points = new Point[]{
-                            new Point(4, -3),
-                            new Point(4, -2),
-                            new Point(4, -1),
-                            new Point(4, 0)
+                            new Point(-3, 4),
+                            new Point(-2, 4),
+                            new Point(-1, 4),
+                            new Point(0, 4)
                     };
                 }
                 else{
                     points = new Point[]{
-                            new Point(1, 0),
+                            new Point(0, 1),
                             new Point(1, 1),
-                            new Point(1, 2),
-                            new Point(1, 3)
+                            new Point(2, 1),
+                            new Point(3, 1)
                     };
                 }
                 figBlocks = generateFigureBlocks(2, points);
@@ -76,17 +76,17 @@ public class TetrisFigure {
             case T_SHAPED:
                 if(!stored) {
                     points = new Point[]{
-                            new Point(4, -2),
-                            new Point(4, -1),
-                            new Point(4, 0),
-                            new Point(5, -1)
+                            new Point(-2, 4),
+                            new Point(-1, 4),
+                            new Point(0, 4),
+                            new Point(-1, 5)
                     };
                 }
                 else{
                     points = new Point[]{
                             new Point(1, 1),
-                            new Point(1, 2),
-                            new Point(1, 3),
+                            new Point(2, 1),
+                            new Point(3, 1),
                             new Point(2, 2)
                     };
                 }
@@ -95,18 +95,18 @@ public class TetrisFigure {
             case L_SHAPED:
                 if(!stored) {
                     points = new Point[]{
-                            new Point(4, -2),
-                            new Point(4, -1),
-                            new Point(4, 0),
-                            new Point(5, 0)
+                            new Point(-2, 4),
+                            new Point(-1, 4),
+                            new Point(0, 4),
+                            new Point(0, 5)
                     };
                 }
                 else{
                     points = new Point[]{
                             new Point(1, 1),
-                            new Point(1, 2),
-                            new Point(1, 3),
-                            new Point(2, 3)
+                            new Point(2, 1),
+                            new Point(3, 1),
+                            new Point(3, 2)
                     };
                 }
                 figBlocks = generateFigureBlocks(4, points);
@@ -114,18 +114,18 @@ public class TetrisFigure {
             case INV_L_SHAPED:
                 if(!stored) {
                     points = new Point[]{
-                            new Point(5, -2),
-                            new Point(5, -1),
-                            new Point(5, 0),
-                            new Point(4, 0)
+                            new Point(-2, 5),
+                            new Point(-1, 5),
+                            new Point(0, 5),
+                            new Point(0, 4)
                     };
                 }
                 else{
                     points = new Point[]{
                             new Point(1, 1),
-                            new Point(1, 2),
-                            new Point(1, 3),
-                            new Point(0, 3)
+                            new Point(2, 1),
+                            new Point(3, 1),
+                            new Point(3, 0)
                     };
                 }
                 figBlocks = generateFigureBlocks(5, points);
@@ -133,18 +133,18 @@ public class TetrisFigure {
             case Z_SHAPED:
                 if(!stored) {
                     points = new Point[]{
-                            new Point(5, -2),
-                            new Point(5, -1),
-                            new Point(4, -1),
-                            new Point(4, 0)
+                            new Point(-2, 5),
+                            new Point(-1, 5),
+                            new Point(-1, 4),
+                            new Point(0, 4)
                     };
                 }
                 else{
                     points = new Point[]{
                             new Point(1, 1),
-                            new Point(1, 2),
-                            new Point(0, 3),
-                            new Point(0, 2)
+                            new Point(2, 1),
+                            new Point(3, 0),
+                            new Point(2, 0)
                     };
                 }
                 figBlocks = generateFigureBlocks(6, points);
@@ -152,18 +152,18 @@ public class TetrisFigure {
             case INV_Z_SHAPED:
                 if(!stored) {
                     points = new Point[]{
-                            new Point(4, -2),
-                            new Point(4, -1),
-                            new Point(5, -1),
-                            new Point(5, 0)
+                            new Point(-2, 4),
+                            new Point(-1, 4),
+                            new Point(-1, 5),
+                            new Point(0, 5)
                     };
                 }
                 else{
                     points = new Point[]{
                             new Point(1, 1),
-                            new Point(1, 2),
+                            new Point(2, 1),
                             new Point(2, 2),
-                            new Point(2, 3)
+                            new Point(3, 2)
                     };
                 }
                 figBlocks = generateFigureBlocks(7, points);
@@ -181,19 +181,19 @@ public class TetrisFigure {
 
     void moveLeft(){
         for(BoardBlock b : figBlocks){
-            --b.position.x;
+            --b.position.j;
         }
     }
 
     void moveRight(){
         for(BoardBlock b : figBlocks){
-            ++b.position.x;
+            ++b.position.j;
         }
     }
 
     void moveDown(){
         for(BoardBlock b : figBlocks){
-            ++b.position.y;
+            ++b.position.i;
         }
     }
 
@@ -226,35 +226,35 @@ public class TetrisFigure {
     }
 
     public void setShift(int shift) {
-        figBlocks[0].position = Point.add(figBlocks[0].position, new Point(shift, 0));
-        figBlocks[1].position = Point.add(figBlocks[1].position, new Point(shift, 0));
-        figBlocks[2].position = Point.add(figBlocks[2].position, new Point(shift, 0));
-        figBlocks[3].position = Point.add(figBlocks[3].position, new Point(shift, 0));
+        figBlocks[0].position = Point.add(figBlocks[0].position, new Point(0, shift));
+        figBlocks[1].position = Point.add(figBlocks[1].position, new Point(0, shift));
+        figBlocks[2].position = Point.add(figBlocks[2].position, new Point(0, shift));
+        figBlocks[3].position = Point.add(figBlocks[3].position, new Point(0, shift));
     }
 
     private boolean rotateLineShaped() {
         Point[] auxRotatedPositions = new Point[4];
         if(rotationState == 1){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, 2));
-            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 1));
-            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(-1, 0));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-2, -1));
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(2, 1));
+            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(1, 0));
+            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(0, -1));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-1, -2));
         }
         else if(rotationState == 2){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, 1));
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, -1));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
-            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, -1));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(2, -2));
+            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(-1, 1));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-2, 2));
         }else if(rotationState == 3){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-2, -1));
-            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(-1, 0));
-            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(0, 1));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(1, 2));
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, -2));
+            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, -1));
+            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, 0));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(2, 1));
         }else if(rotationState == 4){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(2, -2));
-            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(1, -1));
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-2, 2));
+            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(-1, 1));
             auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(0, 0));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-1, 1));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(1, -1));
         }
         for(Point auxRotatedPos : auxRotatedPositions){
             if(ts.rotatingBlockIsConflicting(auxRotatedPos))
@@ -272,22 +272,22 @@ public class TetrisFigure {
             auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, 1));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
             auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(-1, -1));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-1, 1));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(1, -1));
         }
         else if(rotationState == 2){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, 1));
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, -1));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
-            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, -1));
+            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(-1, 1));
             auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-1, -1));
         }else if(rotationState == 3){
             auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, -1));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
             auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, 1));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(1, -1));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-1, 1));
         }else if(rotationState == 4){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, -1));
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, 1));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
-            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(-1, 1));
+            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, -1));
             auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(1, 1));
         }
         for(Point auxRotatedPos : auxRotatedPositions){
@@ -306,23 +306,23 @@ public class TetrisFigure {
             auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, 1));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
             auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(-1, -1));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-2, 0));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(0, -2));
         }
         else if(rotationState == 2){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, 1));
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, -1));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
-            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, -1));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(0, -2));
+            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(-1, 1));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-2, 0));
         }else if(rotationState == 3){
             auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, -1));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
             auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, 1));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(2, 0));
-        }else if(rotationState == 4){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, -1));
-            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
-            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(-1, 1));
             auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(0, 2));
+        }else if(rotationState == 4){
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, 1));
+            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
+            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, -1));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(2, 0));
         }
         for(Point auxRotatedPos : auxRotatedPositions){
             if(ts.rotatingBlockIsConflicting(auxRotatedPos))
@@ -340,23 +340,23 @@ public class TetrisFigure {
             auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, 1));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
             auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(-1, -1));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(0, -2));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-2, 0));
         }
         else if(rotationState == 2){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, 1));
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, -1));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
-            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, -1));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(2, 0));
+            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(-1, 1));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(0, 2));
         }else if(rotationState == 3){
             auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, -1));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
             auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, 1));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(0, 2));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(2, 0));
         }else if(rotationState == 4){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, -1));
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, 1));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
-            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(-1, 1));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-2, 0));
+            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, -1));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(0, -2));
         }
         for(Point auxRotatedPos : auxRotatedPositions){
             if(ts.rotatingBlockIsConflicting(auxRotatedPos))
@@ -371,26 +371,26 @@ public class TetrisFigure {
     private boolean rotateZShaped() {
         Point[] auxRotatedPositions = new Point[4];
         if(rotationState == 1){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(0, 1));
-            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(-1, 0));
-            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(0, -1));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-1, -2));
-        }
-        else if(rotationState == 2){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, 1));
-            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
-            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, 1));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(2, 0));
-        }else if(rotationState == 3){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, -2));
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, 0));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, -1));
             auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(-1, 0));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(0, 1));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-2, -1));
+        }
+        else if(rotationState == 2){
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, -1));
+            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
+            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, 1));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(0, 2));
+        }else if(rotationState == 3){
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-2, -1));
+            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(-1, 0));
+            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(0, -1));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(1, 0));
         }else if(rotationState == 4){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(2, 0));
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(0, 2));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(1, 1));
             auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(0, 0));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-1, 1));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(1, -1));
         }
         for(Point auxRotatedPos : auxRotatedPositions){
             if(ts.rotatingBlockIsConflicting(auxRotatedPos))
@@ -405,26 +405,31 @@ public class TetrisFigure {
     private boolean rotateInvZShaped() {
         Point[] auxRotatedPositions = new Point[4];
         if(rotationState == 1){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, 0));
-            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, -1));
-            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(-1, 0));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-2, -1));
-        }
-        else if(rotationState == 2){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(0, 2));
-            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(1, 1));
-            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(0, 0));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(1, -1));
-        }else if(rotationState == 3){
-            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-2, -1));
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(0, 1));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(-1, 0));
             auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(0, -1));
-            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(1, 0));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-1, -2));
+        }
+        else if(rotationState == 2){
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(2, 0));
+            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(1, 1));
+            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(0, 0));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(-1, 1));
+        }else if(rotationState == 3){
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, -2));
+            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, -1));
+            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(-1, 0));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(0, 1));
         }else if(rotationState == 4){
             auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(1, -1));
             auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
             auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, 1));
             auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(0, 2));
+
+            auxRotatedPositions[0] = Point.add(figBlocks[0].position, new Point(-1, 1));
+            auxRotatedPositions[1] = Point.add(figBlocks[1].position, new Point(0, 0));
+            auxRotatedPositions[2] = Point.add(figBlocks[2].position, new Point(1, 1));
+            auxRotatedPositions[3] = Point.add(figBlocks[3].position, new Point(2, 0));
         }
         for(Point auxRotatedPos : auxRotatedPositions){
             if(ts.rotatingBlockIsConflicting(auxRotatedPos))
