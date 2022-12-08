@@ -32,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // TODO almacenar las mejores scores
-    // TODO configurar guardados de partidas
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -168,7 +168,6 @@ public class TetrisState {
         }
         if(activeFig.rotate()) {
             int shift = calculateShift(activeFig);
-            //System.out.println("SHIFT: " + shift);
             activeFig.setShift(shift);
         }
         return true;

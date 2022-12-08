@@ -10,7 +10,7 @@ import java.io.IOException;
 public class TetrisManagerSQL extends TetrisManager{
     SQLiteDatabase db;
 
-    String stateName = "gameState";
+    int stateID = 1;
 
     TetrisManagerSQL(Context context){
         super(context);
@@ -20,19 +20,19 @@ public class TetrisManagerSQL extends TetrisManager{
 
     @Override
     void saveGameState(String s) throws IOException {
-        db.execSQL("REPLACE INTO tetrisstate VALUES ("+stateName+",'"+s+"')");
+        db.execSQL("REPLACE INTO tetrisstate VALUES ("+ stateID +",'"+s+"')");
     }
 
     @Override
     String getGameState() throws FileNotFoundException {
-        Cursor cursor=db.rawQuery("SELECT state FROM tetrisstate WHERE id="+stateName,null);
+        Cursor cursor=db.rawQuery("SELECT state FROM tetrisstate WHERE id="+ stateID,null);
         cursor.moveToFirst();
         return cursor.getString(0);
     }
 
     @Override
     boolean hasGameState() {
-        Cursor cursor=db.rawQuery("SELECT state FROM tetrisstate WHERE id="+stateName,null);
+        Cursor cursor=db.rawQuery("SELECT state FROM tetrisstate WHERE id="+ stateID,null);
         return cursor.getCount()>=1;
     }
 

@@ -3,17 +3,14 @@ package com.example.tetris;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Switch;
 
 public class Settings extends AppCompatActivity {
 
-    int gameManagerDropDown;
-    int gameManagerItem;
-    Spinner dropdown;
+    int selectedDataManager;
+    Spinner managerDropdown;
     Switch saveSwitch;
 
     @Override
@@ -22,8 +19,21 @@ public class Settings extends AppCompatActivity {
         boolean saveGame = saveSwitch.isChecked();
         ((DataManager) getApplication()).setUserWantsToSave(saveGame);
 
+        selectedDataManager = managerDropdown.getSelectedItemPosition();
         if(saveGame){
-            ((DataManager) getApplication()).setTetrisManager(gameManagerItem);
+            ((DataManager) getApplication()).setTetrisManager(selectedDataManager);
+        }
+    }
+
+    private void showSelectedManagerOnCreate(){
+        if(((DataManager) getApplication()).tetrisManager instanceof TetrisManagerPreferences){
+            managerDropdown.setSelection(0);
+        }
+        else if(((DataManager) getApplication()).tetrisManager instanceof TetrisManagerFiles){
+            managerDropdown.setSelection(1);
+        }
+        else if(((DataManager) getApplication()).tetrisManager instanceof TetrisManagerSQL){
+            managerDropdown.setSelection(2);
         }
     }
 
@@ -33,23 +43,13 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         saveSwitch = ((Switch) findViewById(R.id._saveSwitch));
+        boolean switchValue = ((DataManager) getApplication()).userWantsToSave();
+        saveSwitch.setChecked(switchValue);
 
         String[] items = new String[]{"Preferences", "Files", "SQL"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        dropdown = ((Spinner) findViewById(R.id._managerSpinner));
-        dropdown.setAdapter(adapter);
-
-        gameManagerDropDown = dropdown.getSelectedItemPosition();
-        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                gameManagerItem = (int)l;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        managerDropdown = ((Spinner) findViewById(R.id._managerSpinner));
+        managerDropdown.setAdapter(adapter);
+        showSelectedManagerOnCreate();
     }
 }
