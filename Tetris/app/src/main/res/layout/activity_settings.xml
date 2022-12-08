@@ -22,8 +22,8 @@
     <Spinner
         android:id="@+id/_managerSpinner"
         android:layout_width="315dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="304dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="308dp"
         android:contentDescription="items"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,8 +36,8 @@
         android:text="Choose data manager type:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.197"
+        app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.494" />
+        app:layout_constraintVertical_bias="0.497" />
 </androidx.constraintlayout.widget.ConstraintLayout>
