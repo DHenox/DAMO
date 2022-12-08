@@ -40,13 +40,14 @@ public class Tetris extends AppCompatActivity {
 
     Runnable runnable;
     Handler handler;
+    boolean isGameLayout;
     int cycles;
     int maxCycles;
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(((DataManager) getApplication()).userWantsToSave() && !ts.gameOver()) {
+        if(((DataManager) getApplication()).userWantsToSave() && !ts.gameOver() && isGameLayout) {
             String s = stateToString();
             try {
                 ((DataManager) getApplication()).saveGameState(s);
@@ -54,13 +55,15 @@ public class Tetris extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        handler.removeCallbacks(runnable);
+        if(handler != null && runnable != null) {
+            handler.removeCallbacks(runnable);
+        }
     }
 
     @Override
     protected void onUserLeaveHint() {
         super.onUserLeaveHint();
-        if(((DataManager) getApplication()).userWantsToSave() && !ts.gameOver()) {
+        if(((DataManager) getApplication()).userWantsToSave() && !ts.gameOver() && isGameLayout) {
             String s = stateToString();
             try {
                 ((DataManager) getApplication()).saveGameState(s);
@@ -68,7 +71,9 @@ public class Tetris extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        handler.removeCallbacks(runnable);
+        if(handler != null && runnable != null) {
+            handler.removeCallbacks(runnable);
+        }
     }
 
     /**
@@ -283,6 +288,7 @@ public class Tetris extends AppCompatActivity {
             if (((DataManager) getApplication()).hasGameState()) {
                 System.out.println("EXISTE UN ESTADO GUARDADO");
                 setContentView(R.layout.activity_ask_to_recover);
+                isGameLayout = false;
 
                 newGameBtn = ((Button) findViewById(R.id._newGame));
                 newGameBtn.setText("No");
@@ -338,6 +344,7 @@ public class Tetris extends AppCompatActivity {
 
     private void startGame(){
         setContentView(R.layout.activity_tetris);
+        isGameLayout = true;
 
         setGameButtons();
 

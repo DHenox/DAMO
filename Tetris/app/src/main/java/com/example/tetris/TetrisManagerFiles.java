@@ -16,7 +16,6 @@ import java.util.Scanner;
 public class TetrisManagerFiles extends TetrisManager{
 
     String fileName = "gameState";
-    boolean saveActivated;
 
     TetrisManagerFiles(Context context){
         super(context);
@@ -24,7 +23,6 @@ public class TetrisManagerFiles extends TetrisManager{
 
     @Override
     void saveGameState(String s) throws IOException {
-        System.out.println("Saving board");
         OutputStream writer=myContext.openFileOutput(
                 fileName,
                 Context.MODE_PRIVATE

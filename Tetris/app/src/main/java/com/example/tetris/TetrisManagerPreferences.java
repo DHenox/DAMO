@@ -10,7 +10,6 @@ public class TetrisManagerPreferences extends TetrisManager{
     SharedPreferences preferences;
 
     String stateName = "gameState";
-    boolean saveActivated;
 
     TetrisManagerPreferences(Context context){
         super(context);

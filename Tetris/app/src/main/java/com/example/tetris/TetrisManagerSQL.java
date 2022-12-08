@@ -11,7 +11,6 @@ public class TetrisManagerSQL extends TetrisManager{
     SQLiteDatabase db;
 
     String stateName = "gameState";
-    boolean saveActivated;
 
     TetrisManagerSQL(Context context){
         super(context);

@@ -15,6 +15,7 @@ public class DataManager extends Application {
     boolean saveActivated = false;
 
     void saveGameState(String s) throws IOException {
+        System.out.println("Saving board");
         tetrisManager.saveGameState(s);
     }
 

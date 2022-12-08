@@ -11,7 +11,8 @@ import android.widget.Switch;
 
 public class Settings extends AppCompatActivity {
 
-    int gameManager;
+    int gameManagerDropDown;
+    int gameManagerItem;
     Spinner dropdown;
     Switch saveSwitch;
 
@@ -20,6 +21,10 @@ public class Settings extends AppCompatActivity {
         super.onBackPressed();
         boolean saveGame = saveSwitch.isChecked();
         ((DataManager) getApplication()).setUserWantsToSave(saveGame);
+
+        if(saveGame){
+            ((DataManager) getApplication()).setTetrisManager(gameManagerItem);
+        }
     }
 
     @Override
@@ -34,14 +39,11 @@ public class Settings extends AppCompatActivity {
         dropdown = ((Spinner) findViewById(R.id._managerSpinner));
         dropdown.setAdapter(adapter);
 
-        gameManager = dropdown.getSelectedItemPosition();
+        gameManagerDropDown = dropdown.getSelectedItemPosition();
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                boolean saveGame = saveSwitch.isChecked();
-                if(saveGame) {
-                    ((DataManager) getApplication()).setTetrisManager((int) l);
-                }
+                gameManagerItem = (int)l;
             }
 
             @Override
