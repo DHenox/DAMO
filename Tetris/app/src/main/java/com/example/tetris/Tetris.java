@@ -54,6 +54,7 @@ public class Tetris extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        handler.removeCallbacks(runnable);
     }
 
     @Override
@@ -67,6 +68,7 @@ public class Tetris extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        handler.removeCallbacks(runnable);
     }
 
     /**

@@ -88,7 +88,7 @@ public class TetrisState {
             }
             return true;
         }
-        return true;
+        return false;
     }
 
     private boolean validFigureMove(TetrisFigure tf, Point displacement) {
