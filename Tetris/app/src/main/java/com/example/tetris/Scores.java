@@ -3,29 +3,26 @@ package com.example.tetris;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class Scores extends AppCompatActivity {
-    LinearLayout linlay;
-    Button a;
+    TextView bestScoreTxt;
+    TextView bestSocreTitleTxt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_best_score);
+
         Intent intent = getIntent();
         int bestScore = intent.getIntExtra("bestScore", -1);
 
-        linlay = new LinearLayout(this);
-        linlay.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        linlay.setOrientation(LinearLayout.VERTICAL);
-        linlay.setGravity(Gravity.CENTER);
-        a = new Button(this);
-        a.setText(String.valueOf(bestScore));
-        linlay.addView(a);
-        setContentView(linlay);
+        bestSocreTitleTxt = ((TextView) findViewById(R.id._bestSocreTitleTv));
+        bestSocreTitleTxt.setPaintFlags(bestSocreTitleTxt.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
+        bestScoreTxt = ((TextView) findViewById(R.id._bestScoreTv));
+        bestScoreTxt.setText(String.valueOf(bestScore) + "pts");
     }
 }

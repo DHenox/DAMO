@@ -5,18 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    LinearLayout linlay;
     Button playBtn;
     Button topScoreBtn;
-    Button preferencesBtn;
+    Button settingsBtn;
     int bestScore;
     static final int GAME_REQUEST = 0;
 
@@ -41,16 +37,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-
+        setContentView(R.layout.activity_main);
         bestScore = 0;
 
-        linlay = new LinearLayout(this);
-        linlay.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        linlay.setOrientation(LinearLayout.VERTICAL);
-        linlay.setGravity(Gravity.CENTER);
-
-        playBtn = new Button(this);
+        playBtn = ((Button) findViewById(R.id._playBtn));
         playBtn.setText("Play");
         playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,9 +50,8 @@ public class MainActivity extends AppCompatActivity {
                 setResult(Tetris.RESULT_OK, intent);
             }
         });
-        linlay.addView(playBtn);
 
-        topScoreBtn = new Button(this);
+        topScoreBtn = ((Button) findViewById(R.id._bestScoreBtn));
         topScoreBtn.setText("Best Score");
         topScoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,19 +61,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        linlay.addView(topScoreBtn);
 
-        preferencesBtn = new Button(this);
-        preferencesBtn.setText("Settings");
-        preferencesBtn.setOnClickListener(new View.OnClickListener() {
+        settingsBtn = ((Button) findViewById(R.id._settingsBtn));
+        settingsBtn.setText("Settings");
+        settingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, Settings.class);
                 startActivity(intent);
             }
         });
-        linlay.addView(preferencesBtn);
-
-        setContentView(linlay);
     }
 }
