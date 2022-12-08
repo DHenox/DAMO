@@ -285,6 +285,7 @@ public class Tetris extends AppCompatActivity {
                 ((DataManager) getApplication()).setTetrisManager(0);
             }
 
+            //  SI HAY UN JUEGO GUARDADO
             if (((DataManager) getApplication()).hasGameState()) {
                 System.out.println("EXISTE UN ESTADO GUARDADO");
                 setContentView(R.layout.activity_ask_to_recover);
@@ -322,22 +323,13 @@ public class Tetris extends AppCompatActivity {
                     }
                 });
             }
+            //  SI NO HAY UN JUEGO GUARDADO
             else{
                 startGame();
             }
         }
         //  SI EL USUARIO NO QUIERE GUARDAR PARTIDAS
         else{
-            //  SI HAY UN MANAGER SELECCIONADO CON UN ESTADO GUARDADO, LO ELIMINAMOS
-            if(((DataManager)getApplication()).managerSelected()) {
-                if (((DataManager) getApplication()).hasGameState()) {
-                    try {
-                        ((DataManager) getApplication()).deleteGameState();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
             startGame();
         }
     }
