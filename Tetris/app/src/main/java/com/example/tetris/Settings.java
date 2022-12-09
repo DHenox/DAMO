@@ -3,15 +3,20 @@ package com.example.tetris;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Switch;
 
+import java.io.IOException;
+
 public class Settings extends AppCompatActivity {
 
-    int selectedDataManager;
-    Spinner managerDropdown;
+    Button removeBestScoreBtn;
     Switch saveSwitch;
+    Spinner managerDropdown;
+    int selectedDataManager;
 
     @Override
     public void onBackPressed() {
@@ -41,6 +46,20 @@ public class Settings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        removeBestScoreBtn = ((Button) findViewById(R.id._removeBestScoreBtn));
+        removeBestScoreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((DataManager)getApplication()).hasBestScore()){
+                    try {
+                        ((DataManager)getApplication()).deleteBestScore();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
 
         saveSwitch = ((Switch) findViewById(R.id._saveSwitch));
         boolean switchValue = ((DataManager) getApplication()).userWantsToSave();

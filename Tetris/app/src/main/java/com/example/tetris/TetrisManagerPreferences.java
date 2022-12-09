@@ -11,6 +11,8 @@ public class TetrisManagerPreferences extends TetrisManager{
 
     String stateName = "gameState";
 
+
+
     TetrisManagerPreferences(Context context){
         super(context);
         preferences=context.getSharedPreferences("gamestate",
@@ -39,5 +41,25 @@ public class TetrisManagerPreferences extends TetrisManager{
         SharedPreferences.Editor editor=preferences.edit();
         editor.remove(stateName);
         editor.commit();
+    }
+
+    @Override
+    void saveBestScore(String s) throws IOException {
+
+    }
+
+    @Override
+    String getBestScore() throws FileNotFoundException {
+        return null;
+    }
+
+    @Override
+    boolean hasBestScore() {
+        return false;
+    }
+
+    @Override
+    void deleteBestScore() throws IOException {
+
     }
 }

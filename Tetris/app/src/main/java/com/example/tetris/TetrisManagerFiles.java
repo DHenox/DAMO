@@ -15,7 +15,8 @@ import java.util.Scanner;
 
 public class TetrisManagerFiles extends TetrisManager{
 
-    String fileName = "gameState";
+    String gameStateFile = "gameState";
+    String bestScoreFile = "bestScore";
 
     TetrisManagerFiles(Context context){
         super(context);
@@ -24,18 +25,18 @@ public class TetrisManagerFiles extends TetrisManager{
     @Override
     void saveGameState(String s) throws IOException {
         OutputStream writer=myContext.openFileOutput(
-                fileName,
+                gameStateFile,
                 Context.MODE_PRIVATE
         );
         writer.write(s.getBytes(StandardCharsets.UTF_8));
         writer.close();
 
-        File file=new File(myContext.getFilesDir()+"/"+fileName);
+        File file=new File(myContext.getFilesDir()+"/"+gameStateFile);
     }
 
     @Override
     String getGameState() throws FileNotFoundException {
-        File file=new File(myContext.getFilesDir()+"/"+fileName);
+        File file=new File(myContext.getFilesDir()+"/"+gameStateFile);
         Scanner scanner=new Scanner(file);
         String input="";
         while (scanner.hasNext()) {
@@ -48,7 +49,7 @@ public class TetrisManagerFiles extends TetrisManager{
 
     @Override
     boolean hasGameState() {
-        File file=new File(myContext.getFilesDir()+"/"+fileName);
+        File file=new File(myContext.getFilesDir()+"/"+gameStateFile);
         return file.exists();
     }
 
@@ -56,7 +57,44 @@ public class TetrisManagerFiles extends TetrisManager{
     void deleteGameState() throws IOException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Files.deleteIfExists(
-                    Paths.get(myContext.getFilesDir()+"/"+fileName));
+                    Paths.get(myContext.getFilesDir()+"/"+gameStateFile));
+        }
+    }
+
+    @Override
+    void saveBestScore(String s) throws IOException {
+        OutputStream writer=myContext.openFileOutput(
+                bestScoreFile,
+                Context.MODE_PRIVATE
+        );
+        writer.write(s.getBytes(StandardCharsets.UTF_8));
+        writer.close();
+
+        File file=new File(myContext.getFilesDir()+"/"+bestScoreFile);
+    }
+
+    @Override
+    String getBestScore() throws FileNotFoundException {
+        File file=new File(myContext.getFilesDir()+"/"+bestScoreFile);
+        Scanner scanner=new Scanner(file);
+        String input="";
+        while (scanner.hasNext()) {
+            input+=scanner.nextLine();
+        }
+        return input;
+    }
+
+    @Override
+    boolean hasBestScore() {
+        File file=new File(myContext.getFilesDir()+"/"+bestScoreFile);
+        return file.exists();
+    }
+
+    @Override
+    void deleteBestScore() throws IOException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Files.deleteIfExists(
+                    Paths.get(myContext.getFilesDir()+"/"+bestScoreFile));
         }
     }
 }

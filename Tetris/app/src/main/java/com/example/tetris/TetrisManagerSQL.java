@@ -40,4 +40,24 @@ public class TetrisManagerSQL extends TetrisManager{
     void deleteGameState() throws IOException {
         db.execSQL("DELETE FROM tetrisstate");
     }
+
+    @Override
+    void saveBestScore(String s) throws IOException {
+
+    }
+
+    @Override
+    String getBestScore() throws FileNotFoundException {
+        return null;
+    }
+
+    @Override
+    boolean hasBestScore() {
+        return false;
+    }
+
+    @Override
+    void deleteBestScore() throws IOException {
+
+    }
 }

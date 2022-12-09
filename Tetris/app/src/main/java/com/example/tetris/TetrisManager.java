@@ -15,11 +15,19 @@ abstract public class TetrisManager {
 
     TetrisState ts;
 
-    abstract void saveGameState(String gameState) throws IOException;
+    abstract void saveGameState(String s) throws IOException;
 
     abstract String getGameState() throws FileNotFoundException;
 
     abstract boolean hasGameState();
 
     abstract void deleteGameState() throws IOException;
+
+    abstract void saveBestScore(String s) throws IOException;
+
+    abstract String getBestScore() throws FileNotFoundException;
+
+    abstract boolean hasBestScore();
+
+    abstract void deleteBestScore() throws IOException;
 }

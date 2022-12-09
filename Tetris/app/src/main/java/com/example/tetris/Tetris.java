@@ -281,7 +281,7 @@ public class Tetris extends AppCompatActivity {
         //  SI EL USUARIO QUIERE GUARDAR PARTIDAS
         if(((DataManager)getApplication()).userWantsToSave()){
             //  ASIGNAMOS UN MANAGER POR DEFECTO SI NO HA SELECCIONADO UNO
-            if(!((DataManager)getApplication()).managerSelected()) {
+            if(!((DataManager)getApplication()).tetrisManagerSelected()) {
                 ((DataManager) getApplication()).setTetrisManager(0);
             }
 
@@ -349,6 +349,7 @@ public class Tetris extends AppCompatActivity {
             public void run() {
                 if(!ts.gamePaused()) {
                     if (!ts.gameOver()) {
+                        //  TRAS cycles*delay UNIDADES DE TIEMPO, SE MOVERÁ LA FIGURA ACTIVA 1 POSICIÓN ABAJO
                         if (cycles == maxCycles) {
                             boolean canMoveDown = ts.moveActiveFigureDown();
                             if (!canMoveDown) {
@@ -363,13 +364,28 @@ public class Tetris extends AppCompatActivity {
                             ++cycles;
                         }
                         dv.invalidate();
-                    } else {
-                        Intent intentGameScore = getIntent();
-                        intentGameScore.putExtra("score", ts.getScore());
-                        setResult(RESULT_OK, intentGameScore);
+                    }
+                    //  SI SE PIERDE LA PARTIDA
+                    else{
+                        try {
+                            //  SI NO HAY UN BEST SCORE GUARDADO, GUARDAMOS EL DEL JUEGO ACTUAL
+                            if(!((DataManager)getApplication()).hasBestScore()) {
+                                ((DataManager) getApplication()).saveBestScore(String.valueOf(ts.getScore()));
+                            }
+                            //  SI HAY UN BEST SCORE GUARDADO, LO COMPARAMOS CON EL SCORE DEL JUEGO ACTUAL PARA ACTUALIZAR ESE VALOR
+                            else{
+                                int bestScoreSaved = Integer.valueOf(((DataManager) getApplication()).getBestScore());
+                                if (bestScoreSaved < ts.getScore()) {
+                                    ((DataManager) getApplication()).saveBestScore(String.valueOf(ts.getScore()));
+                                }
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
+                        //  UNA VEZ SE HA PERDIDO LA PARTIDA SE ELIMINA EL ULTIMO ESTADO DE JUEGO GUARDADO
                         if(((DataManager)getApplication()).userWantsToSave()){
-                            if(((DataManager)getApplication()).managerSelected()){
+                            if(((DataManager)getApplication()).tetrisManagerSelected()){
                                 if(((DataManager)getApplication()).hasGameState()){
                                     try {
                                         ((DataManager)getApplication()).deleteGameState();
@@ -380,6 +396,7 @@ public class Tetris extends AppCompatActivity {
                             }
                         }
 
+                        //  MOSTRAMOS EL BOTON DE RESTART NEW GAME
                         ((FrameLayout) findViewById(R.id.board_lay)).removeView(dv);
                         if (restartBtn.getParent() == null) {
                             ((FrameLayout) findViewById(R.id.board_lay)).removeView(restartBtn);

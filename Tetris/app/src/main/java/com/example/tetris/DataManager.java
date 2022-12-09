@@ -10,7 +10,9 @@ import java.io.IOException;
 public class DataManager extends Application {
 
     TetrisManager tetrisManager;
-    boolean hasManager;
+    boolean hasTetrisManager;
+
+    TetrisManager bestScoreManager;
 
     boolean saveActivated = false;
 
@@ -31,7 +33,28 @@ public class DataManager extends Application {
         tetrisManager.deleteGameState();
     }
 
-    boolean managerSelected(){
+    void saveBestScore(String s) throws IOException {
+        System.out.println("Saving best score");
+        bestScoreManager.saveBestScore(s);
+    }
+
+    String getBestScore() throws FileNotFoundException{
+        return bestScoreManager.getBestScore();
+    }
+
+    boolean hasBestScore() {
+        return bestScoreManager.hasBestScore();
+    }
+
+    void deleteBestScore() throws IOException{
+        bestScoreManager.deleteBestScore();
+    }
+
+    void initBestScoreManager(){
+        bestScoreManager=new TetrisManagerFiles(this);
+    }
+
+    boolean tetrisManagerSelected(){
         boolean preferencesManager = tetrisManager instanceof TetrisManagerPreferences;
         boolean filesManager = tetrisManager instanceof TetrisManagerFiles;
         boolean SQLManager = tetrisManager instanceof TetrisManagerSQL;
@@ -43,12 +66,12 @@ public class DataManager extends Application {
         saveActivated = saveGame;
     }
 
-    public boolean userWantsToSave() {
+    boolean userWantsToSave() {
         return saveActivated;
     }
 
     void setTetrisManager(int manager) {
-        hasManager = true;
+        hasTetrisManager = true;
         switch (manager){
             case 0:
                 Log.d("SELECTED MANAGER","Preferences");
