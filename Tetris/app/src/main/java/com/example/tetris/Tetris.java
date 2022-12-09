@@ -364,11 +364,9 @@ public class Tetris extends AppCompatActivity {
                         }
                         dv.invalidate();
                     } else {
-                        ((FrameLayout) findViewById(R.id.board_lay)).removeView(dv);
-                        if (restartBtn.getParent() == null) {
-                            ((FrameLayout) findViewById(R.id.board_lay)).removeView(restartBtn);
-                            ((FrameLayout) findViewById(R.id.board_lay)).addView(restartBtn);
-                        }
+                        Intent intentGameScore = getIntent();
+                        intentGameScore.putExtra("score", ts.getScore());
+                        setResult(RESULT_OK, intentGameScore);
 
                         if(((DataManager)getApplication()).userWantsToSave()){
                             if(((DataManager)getApplication()).managerSelected()){
@@ -382,9 +380,12 @@ public class Tetris extends AppCompatActivity {
                             }
                         }
 
-                        Intent intentGameScore = getIntent();
-                        intentGameScore.putExtra("score", ts.getScore());
-                        setResult(RESULT_OK, intentGameScore);
+                        ((FrameLayout) findViewById(R.id.board_lay)).removeView(dv);
+                        if (restartBtn.getParent() == null) {
+                            ((FrameLayout) findViewById(R.id.board_lay)).removeView(restartBtn);
+                            ((FrameLayout) findViewById(R.id.board_lay)).addView(restartBtn);
+                        }
+
                     }
                 }
                 handler.postDelayed(runnable, delay);

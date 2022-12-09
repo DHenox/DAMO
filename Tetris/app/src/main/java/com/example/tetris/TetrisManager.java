@@ -15,11 +15,7 @@ abstract public class TetrisManager {
 
     TetrisState ts;
 
-    TetrisState getTetrisState(){
-        return ts;
-    }
-
-    abstract void saveGameState(String s) throws IOException;
+    abstract void saveGameState(String gameState) throws IOException;
 
     abstract String getGameState() throws FileNotFoundException;
 

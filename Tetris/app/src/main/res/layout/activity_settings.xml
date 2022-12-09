@@ -7,37 +7,34 @@
     android:contentDescription="a, v, s"
     tools:context=".Settings">
 
-    <Switch
-        android:id="@+id/_saveSwitch"
-        android:layout_width="315dp"
-        android:layout_height="48dp"
-        android:text="Save games"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.884" />
-
-    <Spinner
-        android:id="@+id/_managerSpinner"
-        android:layout_width="315dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="308dp"
-        android:contentDescription="items"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView2"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose data manager type:"
+        android:layout_height="354dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.497" />
+        app:layout_constraintVertical_bias="0.718">
+
+        <Switch
+            android:id="@+id/_saveSwitch"
+            android:layout_width="315dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="30dp"
+            android:text="Save games" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose data manager type:" />
+
+        <Spinner
+            android:id="@+id/_managerSpinner"
+            android:layout_width="315dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="428dp"
+            android:contentDescription="items" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

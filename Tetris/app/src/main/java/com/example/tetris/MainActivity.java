@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
     Button playBtn;
     Button topScoreBtn;
     Button settingsBtn;
-    int bestScore;
+    int bestScore = 0;
     static final int GAME_REQUEST = 0;
 
     @Override
@@ -36,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        bestScore = 0;
 
         playBtn = ((Button) findViewById(R.id._playBtn));
         playBtn.setText("Play");
