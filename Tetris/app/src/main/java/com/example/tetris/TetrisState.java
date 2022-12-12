@@ -166,6 +166,11 @@ public class TetrisState {
         if (paused || activeFig.figType == TetrisFigure.FigureType.SQUARE_SHAPED) {
             return false;
         }
+        for(BoardBlock b : activeFig.figBlocks){
+            if(b.position.i < 0){
+                return false;
+            }
+        }
         if(activeFig.rotate()) {
             int shift = calculateShift(activeFig);
             activeFig.setShift(shift);
