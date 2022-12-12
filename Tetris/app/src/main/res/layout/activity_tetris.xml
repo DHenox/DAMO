@@ -36,7 +36,7 @@
         android:id="@+id/_rotate"
         android:layout_width="75dp"
         android:layout_height="60dp"
-        android:backgroundTint="#505050"
+        android:backgroundTint="#5294A8"
         android:text='⟳'
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -50,7 +50,7 @@
         android:id="@+id/_right"
         android:layout_width="75dp"
         android:layout_height="60dp"
-        android:backgroundTint="#505050"
+        android:backgroundTint="#5294A8"
         android:text='R'
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -64,7 +64,7 @@
         android:id="@+id/_down"
         android:layout_width="75dp"
         android:layout_height="60dp"
-        android:backgroundTint="#505050"
+        android:backgroundTint="#5294A8"
         android:text='↓'
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -78,7 +78,7 @@
         android:id="@+id/_left"
         android:layout_width="75dp"
         android:layout_height="60dp"
-        android:backgroundTint="#505050"
+        android:backgroundTint="#5294A8"
         android:text='L'
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -92,7 +92,7 @@
         android:id="@+id/_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#505050"
+        android:backgroundTint="#AC2121"
         android:text='pause'
         android:textAllCaps="true"
         android:textSize="10sp"
@@ -107,7 +107,7 @@
         android:id="@+id/_drop"
         android:layout_width="260dp"
         android:layout_height="60dp"
-        android:backgroundTint="#505050"
+        android:backgroundTint="#414D77"
         android:text='DROP'
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"

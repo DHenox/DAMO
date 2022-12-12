@@ -22,7 +22,9 @@
             android:layout_width="200dp"
             android:layout_height="75dp"
             android:layout_marginBottom="40dp"
+            android:backgroundTint="#5AC2D5"
             android:text="Play"
+            android:textColor="#FFFFFF"
             android:textSize="20dp" />
 
         <Button
@@ -30,14 +32,18 @@
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_marginBottom="10dp"
+            android:backgroundTint="#277F8F"
             android:text="Best score"
+            android:textColor="#FFFFFF"
             android:textSize="20dp" />
 
         <Button
             android:id="@+id/_settingsBtn"
             android:layout_width="200dp"
             android:layout_height="50dp"
+            android:backgroundTint="#277F8F"
             android:text="Settings"
+            android:textColor="#FFFFFF"
             android:textSize="20dp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
