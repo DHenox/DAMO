@@ -64,10 +64,17 @@ public class Settings extends AppCompatActivity {
         saveSwitch = ((Switch) findViewById(R.id._saveSwitch));
         boolean switchValue = ((DataManager) getApplication()).userWantsToSave();
         saveSwitch.setChecked(switchValue);
+        saveSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                managerDropdown.setEnabled(saveSwitch.isChecked());
+            }
+        });
 
         String[] items = new String[]{"Preferences", "Files", "SQL"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         managerDropdown = ((Spinner) findViewById(R.id._managerSpinner));
+        managerDropdown.setEnabled(saveSwitch.isChecked());
         managerDropdown.setAdapter(adapter);
         showSelectedManagerOnCreate();
     }
