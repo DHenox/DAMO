@@ -349,19 +349,19 @@ public class Tetris extends AppCompatActivity {
             public void run() {
                 if(!ts.gamePaused()) {
                     if (!ts.gameOver()) {
+                        if(cycles < maxCycles){
+                            ++cycles;
+                        }
                         //  TRAS cycles*delay UNIDADES DE TIEMPO, SE MOVERÁ LA FIGURA ACTIVA 1 POSICIÓN ABAJO
-                        if (cycles == maxCycles) {
+                        else {
                             boolean canMoveDown = ts.moveActiveFigureDown();
                             if (!canMoveDown) {
                                 ts.paintActiveFigure();
-                                ts.addNewFigure();
                                 ts.removeLines();
                                 setNewScore();
+                                ts.addNewFigure();
                             }
                             cycles = 0;
-                        }
-                        else {
-                            ++cycles;
                         }
                         dv.invalidate();
                     }
