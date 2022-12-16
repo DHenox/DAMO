@@ -412,9 +412,14 @@ public class Tetris extends AppCompatActivity {
         ((FrameLayout)findViewById(R.id.board_lay)).addView(dv);
     }
 
+
     int lastColmn = -1;
     int lastRow = -1;
     boolean validToMove = false;
+    Point d1;
+    Point d2;
+    int angleRegion = -1;
+    boolean firstTime2Fingers = true;
     @SuppressLint("ClickableViewAccessibility")
     private void setBoardTouchEvent(DrawView dv) {
         dv.setOnTouchListener(new View.OnTouchListener() {
@@ -454,16 +459,79 @@ public class Tetris extends AppCompatActivity {
                         lastColmn = currentColumn;
 
                         //  Mover hacia abajo
-                        /*int currentRow = Math.round(y-dv.minY)/dv.blockWidth;
+                        int currentRow = Math.round(y-dv.minY)/dv.blockWidth;
                         if(lastRow != -1) {
                             if (lastRow < currentRow) {
                                 ts.moveActiveFigureDown();
                             }
                         }
-                        lastRow = currentRow;*/
+                        lastRow = currentRow;
 
                         return true;
                     }
+                }
+                else if(motionEvent.getPointerCount() == 2){
+                    if (firstTime2Fingers) {
+                        // dos dedos han tocado la pantalla
+                        d1 = new Point(motionEvent.getX(0), motionEvent.getY(0));     //  Finger 1
+                        d2 = new Point(motionEvent.getX(1), motionEvent.getY(1));     //  Finger 2
+                        firstTime2Fingers = false;
+                    }
+                    else if (motionEvent.getAction() == MotionEvent.ACTION_POINTER_UP) {
+                        // dos dedos han dejado de tocar la pantalla
+                        d1 = null;
+                        d2 = null;
+                        angleRegion = -1;
+                        firstTime2Fingers = true;
+                    }
+                    else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                        // dos dedos están moviéndose sobre la pantalla
+                        Point d1_ = new Point(motionEvent.getX(0), motionEvent.getY(0));     //  Finger 1'
+                        Point d2_ = new Point(motionEvent.getX(1), motionEvent.getY(1));     //  Finger 2'
+
+                        Point p1 = Point.sub(d2, d1);
+                        Point p2 = Point.sub(d2_, d1_);
+
+                        double angleDeg = Math.asin(Point.dotProd(Point.unitary(p2),Point.unitary(p1)));
+                        angleDeg = Math.abs(Math.toDegrees(angleDeg)-90);
+                        angleDeg = Math.round(angleDeg);
+
+                        if(angleDeg > 5 && angleDeg <= 25 && angleRegion != 1){
+                            if(angleRegion < 1) {
+                                angleRegion = 1;
+                                ts.rotateActiveFigure();
+                            }
+                        }
+                        else if(angleDeg > 25 && angleDeg <= 45 && angleRegion != 2){
+                            if(angleRegion < 2) {
+                                angleRegion = 2;
+                                ts.rotateActiveFigure();
+                            }
+                        }
+                        else if(angleDeg > 45 && angleDeg <= 65 && angleRegion != 3){
+                            if(angleRegion < 3) {
+                                angleRegion = 3;
+                                ts.rotateActiveFigure();
+                            }
+                        }
+                        else if(angleDeg > 65 && angleDeg <= 85 && angleRegion != 4){
+                            if(angleRegion < 4) {
+                                angleRegion = 4;
+                                ts.rotateActiveFigure();
+                            }
+                        }
+                        System.out.println("Angle: " + angleDeg + " Region: " + angleRegion);
+
+                    }
+
+                    // startorientation in [0,1,2,3]
+                    // p1=Point.sub(d2,d1);
+                    // p2=Point.sub(d2',d1')
+                    // a=Math.asin(Point.prodVec(Point.unitary(p1),Point.unitary(p2)))
+                    // if (Math.PI/4<=a && a<=Math.PI*3/4) orientation=(startorientation+1)%4
+                    // else if (Math.PI*3/4<a) orientation=(startorientation+2)%4
+                    // else if (Math.PI/4<=-a && -a<=Math.PI*3/4) orientation=(startorientation+3)%4
+                    // else if (Math.PI*3/4<-a) orientation=(startorientation+2)%4
                 }
                 return false;
             }
